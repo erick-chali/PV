@@ -2,6 +2,8 @@
   (function($, window, document) {
 	  
    $(function() {
+	   var indice;
+	   $('#indice').hide();
 	   $(document).keydown(function (e){
 		   if(e.keyCode==115){
 			   $('#buscarDocumentos').modal('toggle');
@@ -14,11 +16,6 @@
 	   });
 	   /**EVENTOS*/
 	   fechaActual();
-	   
-	   
-	  
-	   
-	   
 	   $('#tDoc').keydown(function(e){
 		   if(e.keyCode==13){
 			   if($(this).val()==3 || $(this).val()==1){
@@ -39,6 +36,22 @@
 		   if(e.keyCode==13){
 			   cargarDatosNit($(this).val());
 		   }
+	   });
+	   $(document).on('keydown', '#cantidad', function (e){
+		   if(e.keyCode==13){
+			   var $td= $(this).closest('tr').children('td').children('input');
+			   if($(this).val()>$td.eq(4).val()){
+				   $('#botones').show();
+				   $('#escondido').hide();
+				   $('#buscarProductosBodegas').modal('toggle');
+				  
+			   }
+		   }
+		   
+	   });
+	   $('#siBodegas').click(function(){
+		   $('#botones').hide();
+		   $('#escondido').show();
 	   });
 	   $jq("input[id$='codigoProducto']").live('keydown',function(e){
 		   	if(e.keyCode==13){
@@ -74,11 +87,14 @@
 		   		
 	   		}else if(e.keyCode==9){
 	   			e.preventDefault();
+	   			$('#filtroTextoProductos').val('');
 	   			var indiceFila = $(this).parent().parent().index();
 //	   			var $td= $(this).closest('tr').children('td').children('input');
 	   			$('#indice').text(indiceFila);
+	   			
 	   			//modificar la primera fila
 //	   			$('table#datosVarios tbody tr:first td:first').children().val(indiceFila);
+	   			$('#contenedorProductos').empty();
 	   			$('#buscarProductos').modal('toggle');
 	   		}
 	   });
@@ -109,16 +125,44 @@
 	   $('#f4').click(function (e){
 		   $('#buscarDocumentos').modal('toggle');
 	   });
+	   $('#f10').click(function (e){
+		   $('#buscarPagos').modal('toggle');
+		   cargarTiposPago();
+	   });
+	 //seleccionar el tipo de pago desde tabla en modal
+	   $jq("table[id$='tablaPagos'] td:nth-child(1)").live('click',function(event) {  
+				//Para evitar que el link actue.  
+		   event.preventDefault();  
+		   var $td= $(this).closest('tr').children('td');
+		   $('#fPago').val($td.eq(0).text());
+		   cargarDatosPago(3,$('#fPago').val(),'0.1');
+		   $('#buscarPagos').modal('toggle');
+	   });
+	   //seleccionar producto
+	   $jq("table[id$='tablaProductos'] td:nth-child(1)").live('click',function(event) {  
+			//Para evitar que el link actue.  
+		   event.preventDefault();  
+		   var $td= $(this).closest('tr').children('td');
+		   $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(0).children().val($td.eq(0).text());
+		   
+		   
+	   });
 	   
-	   function detailFormatter(index, row) {
-	        var html = [];
-	        $.each(row, function (key, value) {
-	            html.push('<p><b>' + 'ID' + ':</b> ' + 'valor' + '</p>');
-	        });
-	        return html.join(''); 
-	    }
 	   
-	   
+	   //cargar productos por filtros
+	   $('#filtroTextoProductos').keydown(function (e){
+		   if(e.keyCode==13){
+			   
+			   $('#contenedorProductos').empty();
+			   if($(this).val()==''){
+				   alert('Debe ingresar algo para buscar');
+			   }else{
+				   cargarProductosFiltro($('#filtroComboProductos').val(),$('#filtroTextoProductos').val(),  separarTexto(0, $('#fPago').val()));
+			   }
+		   }
+		   
+		   
+	   });	   
    });/**fin de document.ready*/
 
    /**FUNCIONES*/
@@ -257,11 +301,11 @@
 	   return codigoProducto;
    }
    function cargarTiposPago(){
+
+	   $('#contenedorPagos').empty();
 	   $.post('CargaTiposPago', function(responseJson) {
 			   if(responseJson!=null){
-				   
 				   var contenedor = $("#contenedorPagos");
-				   contenedor.empty();
 				   var tabla = $("<table id='tablaPagos' class='table table-striped table-bordered table-condensed'></table>");
 			       var thead = $("<thead></thead>");
 			       var tbody = $("<tbody></tbody>");
@@ -274,7 +318,6 @@
 			       
 			       thead.appendTo(tabla);
 			       tbody.appendTo(tabla);
-			       
 			       $.each(responseJson, function(key,value) {
 			            var rowNew = $("<tr> <td><a href='#'></a></td> <td></td> </tr>");
 			               rowNew.children().children().eq(0).text(value['codigo']);
@@ -292,4 +335,58 @@
 			       }
 			   });
    }
+   function cargarProductosFiltro(seleccion, texto, codigoPago){
+	   $('#contenedorProductos').empty();
+	   $.post('FiltrosProducto',{seleccion : seleccion, criterio : texto, codigoPago : codigoPago}, function(responseJson){
+		   if(responseJson!=null){
+			   var contenedor = $("#contenedorProductos");
+			   var tabla = $("<table id='tablaProductos' class='table table-striped table-bordered table-condensed table-hover'></table>");
+		       var thead = $("<thead></thead>");
+		       var tbody = $("<tbody></tbody>");
+		       var encabezado = $("<tr> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th>  <th></th> <th></th> <th></th> <th></th> </tr>");
+		       encabezado.children().eq(0).text("Código");
+		       encabezado.children().eq(1).text("Descripcion");
+		       encabezado.children().eq(2).text("Marca");
+		       encabezado.children().eq(3).text("Precio U");
+		       encabezado.children().eq(4).text("Disponible");
+		       encabezado.children().eq(5).text("Bodega");
+		       encabezado.children().eq(6).text("Back Order");
+		       encabezado.children().eq(7).text("Fecha Espera");
+		       encabezado.children().eq(8).text('Tránsito');
+		       encabezado.children().eq(9).text("Familia");
+		       encabezado.children().eq(10).text("referencia");
+		       encabezado.appendTo(thead);
+		       tabla.appendTo(contenedor);
+		       thead.appendTo(tabla);
+		       tbody.appendTo(tabla);
+		       $.each(responseJson, function(key,value) {
+		            var rowNew = $("<tr> <td><a href='#'></a></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> </tr>");
+		               rowNew.children().children().eq(0).text(value['codigoProducto']);
+		               rowNew.children().eq(1).text(value['descripcionProducto']);
+		               rowNew.children().eq(2).text(value['marcaProducto']);
+		               rowNew.children().eq(3).text(value['precioProducto']);
+		               rowNew.children().eq(4).text(parseInt(value['disponible']));
+		               rowNew.children().eq(5).text(value['bodegaProducto']);
+		               rowNew.children().eq(6).text(parseInt(value['backOrder']));
+		               rowNew.children().eq(7).text(value['fechaespera']);
+		               rowNew.children().eq(8).text(value['transito']);
+		               rowNew.children().eq(9).text(value['familiaProducto']);
+		               rowNew.children().eq(10).text(value['referenciaProducto']);
+		               rowNew.appendTo($('table#tablaProductos tbody'));
+		       });
+		       $("#tablaProductos").dataTable( {
+		    	   "columnDefs": [
+			                       { "width": "200%", "targets": 1 }
+			                     ],
+		    	   "scrollY" : 200,
+		    	   "scrollX" : true,
+			        "language": {
+			            "url": "//cdn.datatables.net/plug-ins/1.10.7/i18n/Spanish.json"   	
+			        }
+			        
+			    });
+		       }
+	   });
+   }
+   
   }(window.jQuery, window, document));
