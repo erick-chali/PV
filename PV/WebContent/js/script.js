@@ -2,8 +2,11 @@
   (function($, window, document) {
 	  
    $(function() {
-	   var indice;
-	   $('#indice').hide();
+	   var codigoP;
+	   var subTotal = 0;
+	   var Total;
+//	   $('#indice').hide();
+	   
 	   $(document).keydown(function (e){
 		   if(e.keyCode==115){
 			   $('#buscarDocumentos').modal('toggle');
@@ -16,6 +19,7 @@
 	   });
 	   /**EVENTOS*/
 	   fechaActual();
+	   $('#fPago').focus();
 	   $('#tDoc').keydown(function(e){
 		   if(e.keyCode==13){
 			   if($(this).val()==3 || $(this).val()==1){
@@ -37,14 +41,43 @@
 			   cargarDatosNit($(this).val());
 		   }
 	   });
-	   $(document).on('keydown', '#cantidad', function (e){
+	   $(document).on('keydown', '#cantidad',function(e){
 		   if(e.keyCode==13){
+			   var indiceFila = $(this).parent().parent().index();
+	   			$('#indice').text(indiceFila);
+	   			codigoP = $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(0).children().val();
+	   			$('#codigoProd').text(codigoP);
 			   var $td= $(this).closest('tr').children('td').children('input');
-			   if($(this).val()>$td.eq(4).val()){
-				   $('#botones').show();
-				   $('#escondido').hide();
-				   $('#buscarProductosBodegas').modal('toggle');
+			   var $td2= $(this).closest('tr').children('td').children('div').children('input');
+			   var canti = parseInt($('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(3).children().val());
+			   var disp = parseInt($('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(4).children().val());
+			   if(canti > disp){
+				   
+		   			
+		   			
+		   			$('#botones').show();
+		   			$('#escondido').hide();
+		   			$('#buscarProductosBodegas').modal('toggle');
 				  
+			   }else{
+				   var resultado;
+				   if($(this).val()==''){
+					   resultado = parseFloat(0).toFixed(2);
+					   $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(8).children().val(resultado);
+					   
+					   subTotal = parseFloat(subTotal+resultado).toFixed(2);
+					   $('#subTotal').text('Subtotal: ' + subTotal);
+					   $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(6).children().focus();
+					   
+				   }else{
+					   
+					   resultado = parseFloat($('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(3).children().val()*
+				   				$('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(5).children().children().eq(1).val()
+					   ).toFixed(2);
+					   $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(8).children().val(resultado);
+					   $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(6).children().focus();
+				   }
+				   
 			   }
 		   }
 		   
@@ -60,6 +93,8 @@
 		   			$('#divFormaPago').addClass('has-error');
 		   			$('#fPago').focus();
 		   		}else{
+		   			var indiceFila = $(this).parent().parent().index();
+		   			$('#indice').text(indiceFila);
 		   			var codigo = $(this).val();
 			   		var lista = 1;
 			   		var formaPago = separarTexto(0, $('#fPago').val());
@@ -89,7 +124,6 @@
 	   			e.preventDefault();
 	   			$('#filtroTextoProductos').val('');
 	   			var indiceFila = $(this).parent().parent().index();
-//	   			var $td= $(this).closest('tr').children('td').children('input');
 	   			$('#indice').text(indiceFila);
 	   			
 	   			//modificar la primera fila
@@ -144,7 +178,8 @@
 		   event.preventDefault();  
 		   var $td= $(this).closest('tr').children('td');
 		   $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(0).children().val($td.eq(0).text());
-		   
+		   $('#buscarProductos').modal('toggle');
+		   $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(0).children().focus();
 		   
 	   });
 	   
@@ -162,9 +197,74 @@
 		   }
 		   
 		   
-	   });	   
+	   });	
+	   $('#filtroTextoBodegas').keydown(function (e){
+		   $('#contenedorProductosBodegas').empty();
+		   if(e.keyCode==13){
+			   if($(this).val()=='' || $('#filtroComboBodegas').val() == ''){
+				   alert('Las busquedas requieren un filtro y una palabra a buscar.');
+			   }else{
+				   
+				   cargarProductosFiltroBodegas($('#filtroComboBodegas').val(), $(this).val(), separarTexto(0, $('#fPago').val()), codigoP);
+			   }
+		   }
+		   
+	   });
+	   //Seleccionar producto de Bodega alterna
+	   
+	   $jq("table[id$='tablaProductosBodega'] td:nth-child(1)").live('click',function(event) {  
+			//Para evitar que el link actue.  
+		   event.preventDefault();  
+		   var $td= $(this).closest('tr').children('td');
+		   $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(4).children().val($td.eq(4).text());
+		   $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(9).children().val($td.eq(5).text());
+		   
+		   $('#buscarProductosBodegas').modal('toggle');
+		   //enfocar cantidad
+		   
+		   $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(3).children().val();
+		   
+		   //hacer la suma
+		   var resultado;
+		   resultado = parseFloat($('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(3).children().val()*
+				   				$('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(5).children().children().eq(1).val()
+		   ).toFixed(2);
+		   
+		   
+		   $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(8).children().val(resultado);
+		   
+		   subTotal = parseFloat(separarTexto(1, $('#subTotal').text())) + parseFloat($('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(8).children().val());
+		   $('#subTotal').text('SubTotal: ' + parseFloat(subTotal).toFixed(2));
+		   $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(6).children().focus();
+	   });
+	   //grabar el Documento
+	   $('#grabarDocumento').click(function(){
+		   var numFilas = $('#datosVarios >tbody >tr').length;
+		   $('#numFilas').text(numFilas);
+		   $.post('IngresarEnc',{
+			   codigoCliente : $('#codigoCliente').text(), nit : $('#nit').val(), nombreCliente : $('#nombre').val(),
+			   direcFactura : $('#direcF').val(), tel : $('#telefono').val(), tarjeta : $('#tarjeta').val(),
+			   direcEnvio : $('#direcE').val(), tipoDoc : separarTexto(0, $('#tDoc').val()), fechaVence : $('#fechaVencimiento').val(),
+			   tipoPago : separarTexto(0, $('#fPago').val()), tipoCredito : $('#tCredito').val(), autoriza : "S",
+			   fechaDoc : $('#fechaEntrega').val(), cargosEnvio : 0, otrosCargos: 0,
+			   montoVenta: separarTexto(1, $('#subTotal').text()), montoTotal : separarTexto(1, $('#total').text()), tipoNota : 0,
+			   caja : 0 , fechaEntrega : $('#fechaEntrega').val(), noConsigna : 0 , codMovDev : 0,
+			   generaSolicitud : 'N', tipoPagoNC : 0 , tipoCliente : $('#tipoCliente').text(),
+			   codigoNegocio : "", cantidadDevolver : 0, autorizoDespacho : "", 
+			   saldo : $('#saldoCliente').text()
+		   } ,function(responseText) {
+			   if(responseText!=null){
+				   $('#numDocumento').text(responseText);
+			   }
+					   
+		   });
+	   });
+	   
    });/**fin de document.ready*/
-
+   
+   function obtenerImporteSinDescuento(){
+	   
+   }
    /**FUNCIONES*/
    //fecha actual
    function fechaActual(){
@@ -184,9 +284,10 @@
 	    var month = d.getMonth()+1;
 	    var day = d.getDate()+1;
 	    var fecha = 
-	        ((''+day).length<2 ? '0' : '') + day + '/' +
-	        ((''+month).length<2 ? '0' : '') + month + '/' +
-	        d.getFullYear();
+	    	d.getFullYear() + '-' + 
+	        ((''+month).length<2 ? '0' : '') + month + '-' +
+	        ((''+day).length<2 ? '0' : '') + day;  
+	        
 		$('#fechaEntrega').val(fecha);
 		
    }
@@ -211,6 +312,9 @@
 					$('#direcE').val(value['direccionE']);
 					$('#telefono').val(value['telefono']);
 					$('#lCredito').val(value['limiteCredito']);
+					$('#codigoCliente').text(value['codigoCliente']);
+					$('#tipoCliente').text(value['tipoCliente']);
+					$('#saldoCliente').text(value['saldo']);
 			    });
 			   fechaEntrega();
 		   }
@@ -238,32 +342,12 @@
 					$('#fPago').val(value['codigoPago'] + ' ' + value['descripcionPago']);
 					$('#tCredito').val(value['esCredito']);
 			    });
+			   $('#codigoProducto').focus();
 		   }
 				   
 	   });
    }
-   //funcion que ira a ir a traer los datos del producto
-   function traerProducto(codigoProducto, codigoLista, formaPago){
-	   $.post('TraerProducto',{codigo : codigoProducto, lista : codigoLista, formaPago : formaPago} ,function(responseJson){
-		   if(responseJson!=null){
-			   var $td= $('#codigoProducto').closest('tr').children('td').children('input');
-			   $.each(responseJson, function(key, value) { 
-				   $('#codigoProducto').closest('tr').children('td').eq(1).children('input').val(value['codigoProducto']);
-//				   $('#codigoProducto').val(value['codigoProducto']);
-				   $('#codigoProducto').closest('tr').children('td').eq(2).children('input').val(value['medida']);
-//				   $('#unidad').val(value['medida']);
-//				   $('#descripcion').val(value['descripcionProducto']);
-//				   $('#disponible').val(value['disponible']);
-//				   $('#precioUnitario').val(value['precioUnitario']);
-//				   $('#descuento').val(value['descuento']);
-//				   $('#importe').val(value['importe']);
-//				   $('#bodega').val(value['codigoBodega']);
-			    });
-		   }
-				   
-	   });
-   }
-   
+  
    //cargar fecha
    function cargarFechaVencimiento(opcion, noDoc){
 	   $.post('TraeDatos',{opcion : opcion , codigo : noDoc} ,function(responseJson) {
@@ -389,4 +473,59 @@
 	   });
    }
    
+   function cargarProductosFiltroBodegas(seleccion, texto, codigoPago, codigoProducto){
+	   $('#contenedorProductosBodegas').empty();
+	   $.post('ProdOtrasBod',{seleccion : seleccion, criterio : texto, codigoPago : codigoPago, codigoProducto : codigoProducto}, function(responseJson){
+		   
+		   if(responseJson!=null){
+			   var contenedor = $("#contenedorProductosBodegas");
+			   var tabla = $("<table id='tablaProductosBodega' class='table table-striped table-bordered table-condensed table-hover'></table>");
+		       var thead = $("<thead></thead>");
+		       var tbody = $("<tbody></tbody>");
+		       var encabezado = $("<tr> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th>  <th></th> <th></th> <th></th> <th></th> </tr>");
+		       encabezado.children().eq(0).text("Codigo");
+		       encabezado.children().eq(1).text("Descripcion");
+		       encabezado.children().eq(2).text("Marca");
+		       encabezado.children().eq(3).text("Precio U");
+		       encabezado.children().eq(4).text("Disponible");
+		       encabezado.children().eq(5).text("Bodega");
+		       encabezado.children().eq(6).text("Back Order");
+		       encabezado.children().eq(7).text("Fecha Espera");
+		       encabezado.children().eq(8).text('Transito');
+		       encabezado.children().eq(9).text("Familia");
+		       encabezado.children().eq(10).text("referencia");
+		       encabezado.appendTo(thead);
+		       tabla.appendTo(contenedor);
+		       thead.appendTo(tabla);
+		       tbody.appendTo(tabla);
+		       $.each(responseJson, function(key,value) {
+		            var rowNew = $("<tr> <td><a href='#'></a></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> </tr>");
+		               rowNew.children().children().eq(0).text(value['codigoProducto']);
+		               rowNew.children().eq(1).text(value['descripcionProducto']);
+		               rowNew.children().eq(2).text(value['marcaProducto']);
+		               rowNew.children().eq(3).text(value['precioProducto']);
+		               rowNew.children().eq(4).text(parseInt(value['disponible']));
+		               rowNew.children().eq(5).text(value['bodegaProducto']);
+		               rowNew.children().eq(6).text(parseInt(value['backOrder']));
+		               rowNew.children().eq(7).text(value['fechaespera']);
+		               rowNew.children().eq(8).text(value['transito']);
+		               rowNew.children().eq(9).text(value['familiaProducto']);
+		               rowNew.children().eq(10).text(value['referenciaProducto']);
+		               rowNew.appendTo($('table#tablaProductosBodega tbody'));
+		       });
+		       $("#tablaProductosBodega").dataTable( {
+		    	   "columnDefs": [
+			                       { "width": "200%", "targets": 1 }
+			                     ],
+		    	   "scrollY" : 200,
+		    	   "scrollX" : true,
+			        "language": {
+			            "url": "//cdn.datatables.net/plug-ins/1.10.7/i18n/Spanish.json"   	
+			        }
+			        
+			    });
+		       }
+	   });
+   }
+   function cargarEncabezado(){}
   }(window.jQuery, window, document));

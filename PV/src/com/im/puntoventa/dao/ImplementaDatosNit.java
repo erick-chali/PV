@@ -29,7 +29,8 @@ public class ImplementaDatosNit implements InterfazDatosNit{
 			stmt = con.prepareCall("{call stp_UDPV_Get_CreditoCliente(?)}");
 			stmt.setString(1, nit);
 			rs = stmt.executeQuery();
-			
+			info = new DatosNit();
+			info.setResultado(0);
 			while(rs.next()){
 				info = new DatosNit();
 				info.setNit(nit);
@@ -39,15 +40,19 @@ public class ImplementaDatosNit implements InterfazDatosNit{
 				info.setDireccionE(rs.getString("DireccionEnv"));
 				info.setTelefono(rs.getString("telefono"));
 				info.setTipoCliente(rs.getString("tipo_cliente"));
+				if(rs.getString("Saldo")!=null){
+					info.setSaldo(rs.getDouble("Saldo"));
+				}else{
+					info.setSaldo(0);
+				}
 				double limite = rs.getDouble("Limite_Credito") - rs.getDouble("Saldo");
 				if(limite!=0){
 					info.setLimiteCredito(limite);
 				}else{
 					info.setLimiteCredito(0.1);
 				}
-					
-				
 				lista.add(info);
+				info.setResultado(1);
 			}
 		}catch(SQLException e){}
 		return lista;

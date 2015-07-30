@@ -10,6 +10,7 @@
         
         <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css">
         <link type="text/css" rel="stylesheet" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
+        
         <link type="text/css" rel="stylesheet" href="css/style.css">
         
     </head>
@@ -48,7 +49,7 @@
                     <div class="well well-sm">
                     	
                     	<div class="row">
-                        <div class="col-md-4">
+                        <div class="col-sm-4 col-md-4">
                                 <h6>Forma de Pago</h6>
                             <div class="input-group" id="divFormaPago">
                                 <input type="text" class="form-control input-sm" placeholder="Forma Pago" id="fPago">
@@ -57,7 +58,7 @@
                                 </span>
                             </div><!-- /input-group -->
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-sm-4 col-md-4">
                             <h6>Tipo Credito</h6>
                             <select class="form-control input-sm" id="tCredito" disabled> 
                             	<option value="">Tipos de cr&eacute;dito</option>
@@ -65,7 +66,7 @@
                             	<option value="2">contado</option>
                             </select> 
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-sm-4 col-md-4">
                             <h6>Limite Credito</h6>
                             <div class="input-group">
                             	<span class="input-group-addon">Q.</span>
@@ -86,31 +87,38 @@
                     
                     
                     <div class="well well-sm">
-                    	<div class="table-responsive" id="contenedorDatosVarios">
                     		<div id="toolbar">
                     			<button type="button" id="agregarFila" class="btn btn-primary btn-sm" style="margin-bottom: 10px;">
                     			<span class="glyphicon glyphicon-plus" aria-hidden="true" ></span>
                     			</button>
                     			<label id="indice"></label>
+                    			<label id="codigoCliente"></label>
+                    			<label id="codigoProd"></label>
+                    			<label id="numFilas"></label>
+                    			<label id="numDocumento"></label>
+                    			<label id="saldoCliente"></label>
+                    			<label id="tipoCliente"></label>
                     		</div>
+                    	<div class="table-responsive" id="contenedorDatosVarios">
                     		
-                    	<table id="datosVarios" data-toggle="table" data-url="false" data-toolbar="#toolbar" class="table table-striped table-bordered">
+                    		
+                    	<table id="datosVarios" class="table table-striped table-bordered table-hover">
 	                    <thead>
 	                    	<tr>
 	                    		
-	                    		<th data-field="producto" class="col-md-1">Producto</th>
-	                    		<th data-field="unidad">Unidad Medida</th>
-	                    		<th data-field="descripcion" class="col-md-2">Descripcion</th>
-	                    		<th data-field="cantidad" class="col-md-2">Cantidad</th>
-	                    		<th data-field="disponible" class="col-md-2">Disponible</th>
-	                    		<th data-field="precio" class="col-md-3">Precio Unitario</th>
-	                    		<th data-field="porcentaje" class="col-md-1">%</th>
-	                    		<th data-field="descuento">Descuento</th>
-	                    		<th data-field="importe">Importe</th>
-	                    		<th data-field="bodega">Bodega</th>
-	                    		<th data-field="envio">Env&iacute;o</th>
-	                    		<th data-field="dm" class="col-md-1">DM</th>
-	                    		<th data-field="observaciones">Observaciones</th>
+	                    		<th style="min-width: 100px;">Producto</th>
+	                    		<th style="min-width: 50px;">Unidad Medida</th>
+	                    		<th style="min-width: 150px;">Descripcion</th>
+	                    		<th style="min-width: 50px;">Cantidad</th>
+	                    		<th style="min-width: 50px;">Disponible</th>
+	                    		<th style="min-width: 125px;">Precio Unitario</th>
+	                    		<th style="min-width: 75px;">%</th>
+	                    		<th style="min-width: 75px;">Descuento</th>
+	                    		<th style="min-width: 75px;">Importe</th>
+	                    		<th style="min-width: 75px;">Bodega</th>
+	                    		<th style="min-width: 50px;">Env&iacute;o</th>
+	                    		<th style="min-width: 75px;">DM</th>
+	                    		<th style="min-width: 150px;">Observaciones</th>
 	                    	</tr>
 	                    </thead>
 	                    <tbody>
@@ -133,14 +141,19 @@
 	                    </tbody>
                     </table>
                     	</div>
-                    	
+                    	<h5 class="text-right" id="subTotal">SubTotal: 0.00</h5>
+                    	<h5 class="text-right" id="total">Total: 0.00</h5>
+                    	<button type="button" class="btn btn-primary btn-sm" id="grabarDocumento">
+  							<span class="glyphicon glyphicon-save" aria-hidden="true" ></span> Grabar
+						</button>
+						
                     </div>
                     
                     
                     <div class="well well-sm">
                     	
                     	<div class="row">
-                        <div class="col-md-4">
+                        <div class="col-sm-4 col-md-4">
                                 <h6>Tipo Documento</h6>
                             <div class="input-group">
                                 <input type="text" class="form-control input-sm" placeholder="Tipo Documento" id="tDoc">
@@ -149,7 +162,7 @@
                                 </span>
                             </div><!-- /input-group -->
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-sm-4 col-md-4">
                             <h6>No. Documento</h6>
                             <div class="input-group">
                                 <input type="text" class="form-control input-sm" placeholder="No. Documento" id="nDoc">
@@ -158,7 +171,7 @@
                                 </span>
                             </div><!-- /input-group -->
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-sm-4 col-md-4">
                             <h6>Fecha Vencimiento</h6>
                             <input type="text" class="form-control input-sm" id="fechaVencimiento" disabled>
                         </div>
@@ -167,7 +180,7 @@
                     
                     
                     	<div class="row">
-                        <div class="col-md-3">
+                        <div class="col-sm-3 col-md-3">
                             <h6>Nit</h6>
 <!--                            <label for="nit">NIT</label>-->
                             <div class="input-group">
@@ -177,12 +190,12 @@
                                 </span>
                             </div><!-- /input-group -->
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-sm-3 col-md-3">
 <!--                            <label for="nombre">Nombre Cliente</label>-->
                             <h6>Nombre Cliente</h6>
                             <input type="text" class="form-control input-sm" id="nombre" placeholder="Nombre Cliente" disabled>     
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-sm-6 col-md-6">
 <!--                            <label for="direcF">Dirección Factura</label>-->
                             <h6>Dirección Factura</h6>
                             <input class="form-control input-sm" type="text" id="direcF" placeholder="Dirección Factura">
@@ -190,21 +203,21 @@
                     </div><!--fin de fila-->
                     
                     <div class="row" style="margin-top: 5px">
-                        <div class="col-md-2">
+                        <div class="col-sm-2 col-md-2">
 <!--                            <label for="telefono">Teléfono</label>-->
                             <h6>Teléfono</h6>
                             <input type="tel" class="form-control input sm" id="telefono" placeholder="Teléfono">
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-sm-2 col-md-2">
                             <h6>Tarjeta</h6>
 <!--                            <label for="tarjeta">Tarjeta</label>-->
                             <input type="text" class="form-control input-sm" id="tarjeta" placeholder="Tarjeta" >     
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-sm-2 col-md-2">
                             <h6>Fecha Entrega</h6>
-                            <input type="text" class="form-control inputsm" id="fechaEntrega" disabled>
+                            <input type="text" class="form-control input-sm" id="fechaEntrega" disabled>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-sm-6 col-md-6">
                             <h6>Dirección Envío</h6>
 <!--                            <label for="direcE">Dirección Envío</label>-->
                             <input class="form-control input-sm" type="text" id="direcE" placeholder="Dirección Envío">
@@ -212,31 +225,26 @@
                     </div><!--fin de fila-->
                     </div>
                     
+                    <div class="row">
+                        <div class="col-sm-3 col-md-3 text-center">
+                        	<h5 id="fecha"></h5>
+                        </div>
+                        <div class="col-sm-3 col-md-3 text-center">
+                            <h5>${sucursal}</h5>
+                        </div>
+                        <div class="col-sm-3 col-md-3 text-center">
+                            <h5>${usuario}</h5>  
+                        </div>
+                        <div class="col-sm-3 col-md-3 text-center">
+                            <h5>${vendedor}</h5>    
+                        </div>
+                    </div><!--fin de fila-->
                 </div>
         </div><!-- FIN PANEL COTIZACION -->
         
         
         
-        	<div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-3 text-center">
-                        	<h5 id="fecha"></h5>
-                        </div>
-                        <div class="col-md-3 text-center">
-                            <h5>${sucursal}</h5>
-                        </div>
-                        <div class="col-md-3 text-center">
-                            <h5>${usuario}</h5>  
-                        </div>
-                        <div class="col-md-3 text-center">
-                            <h5>${vendedor}</h5>    
-                        </div>
-                    </div><!--fin de fila-->
-                    
-                    
-                </div>
-        </div><!-- FIN PANEL PIE PAGINA -->
+        	
         
         <!-- Modal -->
 		<div id="autorizar" class="modal" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">

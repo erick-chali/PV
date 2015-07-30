@@ -44,16 +44,20 @@ public class InformacionNit extends HttpServlet {
 		datos.setNit((String)request.getSession().getAttribute("nit"));
 		datos = inter.obtenerDatos(datos);
 		
+		
+		
 		ArrayList<DatosNit> data = null;
 		data = new ArrayList<DatosNit>();
 		data = ImplementaDatosNit.obtenerInformacion();
 		
+		
 		Gson gson = new Gson();
 		JsonElement elemento = gson.toJsonTree(data, new TypeToken<List<DatosNit>>(){}.getType());
 		JsonArray arreglo = elemento.getAsJsonArray();
-		datos = null;
+		
 		response.setContentType("application/json");
 		
+		datos = null;
 		response.getWriter().print(arreglo);
 		
 	}

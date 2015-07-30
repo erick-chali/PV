@@ -3,6 +3,7 @@ package com.im.puntoventa.datos;
 public class DatosNit {
 	public DatosNit(String nit, String codigoCliente, String nombreCliente, String direccionF,
 			String direccionE, String telefono, String tipoCliente, String tipoCredito, double limiteCredito
+			,double saldo
 			){
 		this.setNit(nit);
 		this.setCodigoCliente(codigoCliente);
@@ -13,6 +14,7 @@ public class DatosNit {
 		this.setTipoCliente(tipoCliente);
 		this.setTipoCredito(tipoCredito);
 		this.setLimiteCredito(limiteCredito);
+		this.setSaldo(saldo);
 	}
 	
 	public DatosNit(){}
@@ -26,7 +28,17 @@ public class DatosNit {
 	private String tipoCliente;
 	private String tipoCredito;
 	private double limiteCredito;
+	private int resultado;
+	private double saldo;
 	
+	public double getSaldo() {
+		return saldo;
+	}
+
+	public void setSaldo(double saldo) {
+		this.saldo = saldo;
+	}
+
 	public String getNit() {
 		return nit;
 	}
@@ -82,6 +94,14 @@ public class DatosNit {
 
 	public void setLimiteCredito(double limiteCredito) {
 		this.limiteCredito = limiteCredito;
+	}
+
+	public int getResultado() {
+		return resultado;
+	}
+
+	public void setResultado(int resultado) {
+		this.resultado = resultado;
 	}
 	
 	
