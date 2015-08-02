@@ -26,7 +26,8 @@
 
     }(window.jQuery, window, document));
     </script>
-    <img alt="Instalaciones Modernas" src="img/s.jpg" align="middle" id="logo">
+    <center><img alt="Instalaciones Modernas" src="img/s.jpg" align="middle" id="logo"></center>
+    
     
 
   	
