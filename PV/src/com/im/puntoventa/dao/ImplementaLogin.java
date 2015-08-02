@@ -33,6 +33,7 @@ public class ImplementaLogin implements InterLogin{
 					datosUsuario.setSucursal(rs.getString("Sucursal"));
 					datosUsuario.setUsuarioID(rs.getString("UserID"));
 					datosUsuario.setNombre(rs.getString("Vendedor"));
+					datosUsuario.setCodigoVendedor(rs.getString("Codigo_Vendedor"));
 					datosUsuario.setRespuesta(1);
 					}
 					else{

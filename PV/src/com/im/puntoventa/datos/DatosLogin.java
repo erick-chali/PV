@@ -10,8 +10,16 @@ public class DatosLogin {
 	private String nombre;
 	private String usuarioID;
 	private String codSucursal;
+	private String codigoVendedor;
 	private int respuesta;
 	private String notificacion;
+	
+	public String getCodigoVendedor() {
+		return codigoVendedor;
+	}
+	public void setCodigoVendedor(String codigoVendedor) {
+		this.codigoVendedor = codigoVendedor;
+	}
 	public String getUsuario() {
 		return usuario;
 	}

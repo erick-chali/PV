@@ -43,7 +43,7 @@ public class IngresarEnc extends HttpServlet {
 		datos.setTel(request.getParameter("tel"));
 		datos.setTarjeta(request.getParameter("tarjeta"));
 		datos.setDirecEnvio(request.getParameter("direcEnvio"));
-		datos.setCodigoVendedor((String) request.getSession().getAttribute("usuarioID"));
+		datos.setCodigoVendedor((String) request.getSession().getAttribute("codigoVendedor"));
 		datos.setUsername((String) request.getSession().getAttribute("usuario"));
 		datos.setTipoDocumento(request.getParameter("tipoDoc"));
 		datos.setFechaVence(request.getParameter("fechaVence"));

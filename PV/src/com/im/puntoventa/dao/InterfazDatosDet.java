@@ -1,5 +1,8 @@
 package com.im.puntoventa.dao;
 
-public class InterfazDatosDet {
+import com.im.puntoventa.datos.DatosDet;
 
+public interface InterfazDatosDet {
+	
+	DatosDet obtenerDatos(DatosDet datos);
 }
