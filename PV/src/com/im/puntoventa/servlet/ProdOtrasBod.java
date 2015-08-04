@@ -44,21 +44,13 @@ public class ProdOtrasBod extends HttpServlet {
 		request.getSession().setAttribute("codigoPago", request.getParameter("codigoPago"));
 		request.getSession().setAttribute("criterio", request.getParameter("criterio"));
 		request.getSession().setAttribute("codigoProducto", request.getParameter("codigoProducto"));
-		
+		request.getSession().setAttribute("codigoLista", request.getParameter("codigoLista"));
 		datos = new DatosProdOtrasBod();
 		datos.setLista("1");
 		datos.setTipoPago((String) request.getSession().getAttribute("codigoPago"));
 		datos.setCodigoProducto((String) request.getSession().getAttribute("codigoProducto"));
+		datos.setBuscaDescripcion((String) request.getSession().getAttribute("criterio"));
 		
-		if(Integer.parseInt( (String) request.getSession().getAttribute("seleccion"))==1){
-			datos.setBuscaReferencia((String) request.getSession().getAttribute("criterio"));
-		}else if(Integer.parseInt( (String) request.getSession().getAttribute("seleccion"))==2){
-			datos.setBuscaDescripcion((String) request.getSession().getAttribute("criterio"));
-		}else if(Integer.parseInt( (String) request.getSession().getAttribute("seleccion"))==3){
-			datos.setBuscaMarca((String) request.getSession().getAttribute("criterio"));
-		}else if(Integer.parseInt( (String) request.getSession().getAttribute("seleccion"))==4){
-			datos.setBuscaFamilia((String) request.getSession().getAttribute("criterio"));
-		}
 		
 		datos = interfaz.parametros(datos);
 		

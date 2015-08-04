@@ -1,20 +1,8 @@
-
-  (function($, window, document) {
+(function ($, window, document) {
 	  
-   $(function() {
-	   var codigoP;
-	   var descripcion;
-	   var medida;
-	   var cantidad;
-	   var disponible;
-	   var precioU;
-	   var porDesc;
-	   var descuento;
-	   var importe;
-	   var bodega;
-	   var envio;
-	   var dm;
-	   var observ;
+    
+    $(function () {
+	   var codigoP, descripcion, medida, cantidad, disponible, precioU, porDesc, descuento, importe, envio, dm, observ;
 	   var subTotal = 0;
 	   var Total;
 //	   $('#indice').hide();
@@ -68,6 +56,7 @@
 		   			$('#botones').show();
 		   			$('#escondido').hide();
 		   			$('#buscarProductosBodegas').modal('toggle');
+		   			$('#contenedorProductosBodegas').empty();
 				  
 			   }else{
 				   var resultado;
@@ -95,6 +84,11 @@
 	   $('#siBodegas').click(function(){
 		   $('#botones').hide();
 		   $('#escondido').show();
+		   $('#contenedorProductosBodegas').empty();
+		   
+		   cargarProductosFiltroBodegas(1, separarTexto(0, $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(2).children().val()),  separarTexto(0, $('#fPago').val()),
+				   $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(0).children().val()	   
+		   );
 	   });
 	   $jq("input[id$='codigoProducto']").live('keydown',function(e){
 		   	if(e.keyCode==13){
@@ -209,8 +203,9 @@
 		   
 	   });	
 	   $('#filtroTextoBodegas').keydown(function (e){
-		   $('#contenedorProductosBodegas').empty();
+		   
 		   if(e.keyCode==13){
+			   $('#contenedorProductosBodegas').empty();
 			   if($(this).val()=='' || $('#filtroComboBodegas').val() == ''){
 				   alert('Las busquedas requieren un filtro y una palabra a buscar.');
 			   }else{
@@ -523,9 +518,9 @@
 	   });
    }
    
-   function cargarProductosFiltroBodegas(seleccion, texto, codigoPago, codigoProducto){
+   function cargarProductosFiltroBodegas(codigoLista, texto, codigoPago, codigoProducto){
 	   $('#contenedorProductosBodegas').empty();
-	   $.post('ProdOtrasBod',{seleccion : seleccion, criterio : texto, codigoPago : codigoPago, codigoProducto : codigoProducto}, function(responseJson){
+	   $.post('ProdOtrasBod',{codigoLista : codigoLista, criterio : texto, codigoPago : codigoPago, codigoProducto : codigoProducto}, function(responseJson){
 		   
 		   if(responseJson!=null){
 			   var contenedor = $("#contenedorProductosBodegas");

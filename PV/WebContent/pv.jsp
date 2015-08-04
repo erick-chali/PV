@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="charset=ISO-8859-1" lang="es">
+        <meta charset="utf-8" lang="es">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>PUNTO VENTA</title>
@@ -105,7 +105,7 @@
                     		
                     	<table id="datosVarios" class="table table-striped table-bordered table-hover">
 	                    <thead>
-	                    	<tr>
+	                    	<tr style="background-color: #0088CC; color: #ffffff;">
 	                    		
 	                    		<th style="width: 100px;">Producto</th>
 	                    		<th style="width: 75px;">U M</th>
@@ -154,16 +154,17 @@
                     <div class="well well-sm">
                     	
                     	<div class="row">
-                        <div class="col-sm-4 col-md-4">
-                                <h6>Tipo Documento</h6>
-                            <div class="input-group">
-                                <input type="text" class="form-control input-sm" placeholder="Tipo Documento" id="tDoc">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-primary btn-sm" type="button" id="f9">F9</button>
-                                </span>
-                            </div><!-- /input-group -->
+                        <div class="col-sm-3 col-md-3">
+                        		
+	                    	<h6>Tipo Documento</h6>
+		                    	<div class="input-group">
+		                        	<input type="text" class="form-control input-sm" placeholder="Tipo Documento" id="tDoc">
+		                           	<span class="input-group-btn">
+		                            	<button class="btn btn-primary btn-sm" type="button" id="f9">F9</button>
+		                           	</span>
+		                        </div><!-- /input-group -->
                         </div>
-                        <div class="col-sm-4 col-md-4">
+                        <div class="col-sm-3 col-md-3">
                             <h6>No. Documento</h6>
                             <div class="input-group">
                                 <input type="text" class="form-control input-sm" placeholder="No. Documento" id="nDoc">
@@ -172,9 +173,9 @@
                                 </span>
                             </div><!-- /input-group -->
                         </div>
-                        <div class="col-sm-4 col-md-4">
-                            <h6>Fecha Vencimiento</h6>
-                            <input type="text" class="form-control input-sm" id="fechaVencimiento" disabled>
+                        <div class="col-sm-3 col-md-3">
+                        	<h6>Fecha Vencimiento</h6>
+                           	<input type="text" class="form-control input-sm" id="fechaVencimiento" disabled>
                         </div>
                         
                     </div><!--fin de fila-->
@@ -370,18 +371,7 @@
 		      		<button type="button" class="btn btn-danger btn-sm" data-dismiss="modal" style="margin-top: 10px;" id="noBodegas">No</button>
 		      	</div>
 		      	<div id="escondido">
-		      		<div class="col-md-6" style="margin-bottom: 10px;">
-			      		<select id="filtroComboBodegas" class="form-control input-sm">
-			      		<option value="">Seleccione Filtro</option>
-			      		<option value="1">Referencia</option>
-			      		<option value="2">Descripci&oacute;n</option>
-			      		<option value="3">Marca</option>
-			      		<option value="4">Familia</option>
-			      		</select>
-		      		</div>
-			      	<div class="col-md-6" style="margin-bottom: 10px;">
-			      		<input type="text" class="form-control input-sm col-md-6" id="filtroTextoBodegas">
-			      	</div>
+		      		
 			      	<div id="contenedorProductosBodegas">
 			      		 
 			      	</div>
