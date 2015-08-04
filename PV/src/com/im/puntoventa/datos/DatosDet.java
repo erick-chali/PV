@@ -2,7 +2,7 @@ package com.im.puntoventa.datos;
 
 public class DatosDet {
 	
-	private DatosDet(){}
+	public DatosDet(){}
 	
 	
 	private String tipoDoc;
@@ -29,6 +29,14 @@ public class DatosDet {
 	private String serieDevProy;
 	private String numeroDevProy;
 	private String ordenCompra;
+	private String mensaje;
+	
+	public String getMensaje() {
+		return mensaje;
+	}
+	public void setMensaje(String mensaje) {
+		this.mensaje = mensaje;
+	}
 	public String getTipoDoc() {
 		return tipoDoc;
 	}

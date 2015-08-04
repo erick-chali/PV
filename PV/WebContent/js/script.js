@@ -3,6 +3,18 @@
 	  
    $(function() {
 	   var codigoP;
+	   var descripcion;
+	   var medida;
+	   var cantidad;
+	   var disponible;
+	   var precioU;
+	   var porDesc;
+	   var descuento;
+	   var importe;
+	   var bodega;
+	   var envio;
+	   var dm;
+	   var observ;
 	   var subTotal = 0;
 	   var Total;
 //	   $('#indice').hide();
@@ -10,8 +22,6 @@
 	   $(document).keydown(function (e){
 		   if(e.keyCode==115){
 			   $('#buscarDocumentos').modal('toggle');
-		   }else if(e.keyCode==17){
-			   $('#buscarProductos').modal('toggle');
 		   }else if(e.keyCode==121){
 			   $('#buscarPagos').modal('toggle');
 			   cargarTiposPago();
@@ -19,7 +29,7 @@
 	   });
 	   /**EVENTOS*/
 	   fechaActual();
-	   $('#fPago').focus();
+	   $('#nit').focus();
 	   $('#tDoc').keydown(function(e){
 		   if(e.keyCode==13){
 			   if($(this).val()==3 || $(this).val()==1){
@@ -149,7 +159,7 @@
         		+'<td><input type="text" class="form-control input-sm" id="descuento" ></td>'
         		+'<td><input type="text" class="form-control input-sm" id="importe" ></td>'
         		+'<td><input type="text" class="form-control input-sm" id="bodega"></td>'
-        		+'<td><input type="checkbox"></td>'
+        		+'<td><input type="checkbox" id="envia"></td>'
         		+'<td><input type="text" class="form-control input-sm" id="descuentoMaximo" disabled></td>'
         		+'<td><input type="text" class="form-control input-sm" id="observaciones"></td>'
 		   		 +'</tr>');
@@ -241,23 +251,63 @@
 	   $('#grabarDocumento').click(function(){
 		   var numFilas = $('#datosVarios >tbody >tr').length;
 		   $('#numFilas').text(numFilas);
-		   $.post('IngresarEnc',{
-			   codigoCliente : $('#codigoCliente').text(), nit : $('#nit').val(), nombreCliente : $('#nombre').val(),
-			   direcFactura : $('#direcF').val(), tel : $('#telefono').val(), tarjeta : $('#tarjeta').val(),
-			   direcEnvio : $('#direcE').val(), tipoDoc : separarTexto(0, $('#tDoc').val()), fechaVence : $('#fechaVencimiento').val(),
-			   tipoPago : separarTexto(0, $('#fPago').val()), tipoCredito : $('#tCredito').val(), autoriza : "S",
-			   fechaDoc : $('#fechaEntrega').val(), cargosEnvio : 0, otrosCargos: 0,
-			   montoVenta: separarTexto(1, $('#subTotal').text()), montoTotal : separarTexto(1, $('#total').text()), tipoNota : 0,
-			   caja : 0 , fechaEntrega : $('#fechaEntrega').val(), noConsigna : 0 , codMovDev : 0,
-			   generaSolicitud : 'N', tipoPagoNC : 0 , tipoCliente : $('#tipoCliente').text(),
-			   codigoNegocio : "", cantidadDevolver : 0, autorizoDespacho : "", 
-			   saldo : $('#saldoCliente').text()
-		   } ,function(responseText) {
-			   if(responseText!=null){
-				   $('#numDocumento').text(responseText);
+//		   $.post('IngresarEnc',{
+//			   codigoCliente : $('#codigoCliente').text(), nit : $('#nit').val(), nombreCliente : $('#nombre').val(),
+//			   direcFactura : $('#direcF').val(), tel : $('#telefono').val(), tarjeta : $('#tarjeta').val(),
+//			   direcEnvio : $('#direcE').val(), tipoDoc : separarTexto(0, $('#tDoc').val()), fechaVence : $('#fechaVencimiento').val(),
+//			   tipoPago : separarTexto(0, $('#fPago').val()), tipoCredito : $('#tCredito').val(), autoriza : "S",
+//			   fechaDoc : $('#fechaEntrega').val(), cargosEnvio : 0, otrosCargos: 0,
+//			   montoVenta: separarTexto(1, $('#subTotal').text()), montoTotal : separarTexto(1, $('#total').text()), tipoNota : 0,
+//			   caja : 0 , fechaEntrega : $('#fechaEntrega').val(), noConsigna : 0 , codMovDev : 0,
+//			   generaSolicitud : 'N', tipoPagoNC : 0 , tipoCliente : $('#tipoCliente').text(),
+//			   codigoNegocio : "", cantidadDevolver : 0, autorizoDespacho : "", 
+//			   saldo : $('#saldoCliente').text()
+//		   } ,function(responseText) {
+//			   if(responseText!=null){
+//				   $('#numDocumento').text(responseText);
+//			   }
+//					   
+//		   });
+		   $('#datosVarios tbody tr').each(function (index){
+			   codigoP = $('#datosVarios > tbody > tr').eq(index).children().eq(0).children().val();
+			   descripcion = $('#datosVarios > tbody > tr').eq(index).children().eq(2).children().val();
+			   medida = $('#datosVarios > tbody > tr').eq(index).children().eq(1).children().val();
+			   cantidad = $('#datosVarios > tbody > tr').eq(index).children().eq(3).children().val();
+			   disponible = $('#datosVarios > tbody > tr').eq(index).children().eq(4).children().val();
+			   precioU = $('#datosVarios > tbody > tr').eq(index).children().eq(5).children().children().eq(1).val();
+			   if($('#datosVarios > tbody > tr').eq(index).children().eq(6).children().val()==''){
+				   porDesc = 0.00;
+			   }else{
+
+				   porDesc = $('#datosVarios > tbody > tr').eq(index).children().eq(6).children().val();
 			   }
-					   
+			   descuento = $('#datosVarios > tbody > tr').eq(index).children().eq(7).children().val();
+			   importe = $('#datosVarios > tbody > tr').eq(index).children().eq(8).children().val();
+			   bodega = $('#datosVarios > tbody > tr').eq(index).children().eq(9).children().val();
+			   if($('#envia').prop('checked')){
+				   envio = 1;
+			   }else{
+				   envio = 0;
+			   }
+			   dm = $('#datosVarios > tbody > tr').eq(index).children().eq(10).children().val();
+			   observ = $('#datosVarios > tbody > tr').eq(index).children().eq(11).children().val();
+			   alert(porDesc + ' ' + envio);
+			   $.post('IngresarDet',{
+				   tipoDocumento : separarTexto(0, $('#tDoc').val()), serieDocumento : '', numeroDocumento : 57020, numCorrelativo : 1, codigoProducto : codigoP,
+				   UMedida : medida, cantidad: cantidad, precio : precioU, porDescuento : porDesc, descuento : descuento, total: importe, codigoCliente : $('#codigoCliente').text(),
+				   promo : 0, bodega : bodega, envio : envio, observaciones : observ, lista : 1, pago : separarTexto(0, $('#fPago').val()), kit : 'N', corrKit : 0, codPromo : 0,
+				   serieDevProy : '', numDevProy : '0', ordenCompra : 0
+				   
+				   
+			   } ,function(responseText) {
+				   if(responseText!=null){
+					   $('#mensaje').text(responseText);
+				   }
+						   
+			   });
 		   });
+		   
+//		   
 	   });
 	   
    });/**fin de document.ready*/

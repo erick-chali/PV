@@ -29,8 +29,6 @@
     <center><img alt="Instalaciones Modernas" src="img/s.jpg" align="middle" id="logo"></center>
     
     
-
-  	
     <div class="container">
     	
       <form action="Login" class="form-signin" method="post" id="formLogin" onsubmit="validarFormulario">

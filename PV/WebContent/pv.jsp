@@ -98,6 +98,7 @@
                     			<label id="numDocumento"></label>
                     			<label id="saldoCliente"></label>
                     			<label id="tipoCliente"></label>
+                    			<label id="mensaje"></label>
                     		</div>
                     	<div class="table-responsive" id="contenedorDatosVarios">
                     		
@@ -106,19 +107,19 @@
 	                    <thead>
 	                    	<tr>
 	                    		
-	                    		<th style="min-width: 100px;">Producto</th>
-	                    		<th style="min-width: 50px;">Unidad Medida</th>
-	                    		<th style="min-width: 150px;">Descripcion</th>
-	                    		<th style="min-width: 50px;">Cantidad</th>
-	                    		<th style="min-width: 50px;">Disponible</th>
-	                    		<th style="min-width: 125px;">Precio Unitario</th>
-	                    		<th style="min-width: 75px;">%</th>
-	                    		<th style="min-width: 75px;">Descuento</th>
-	                    		<th style="min-width: 75px;">Importe</th>
-	                    		<th style="min-width: 75px;">Bodega</th>
-	                    		<th style="min-width: 50px;">Env&iacute;o</th>
-	                    		<th style="min-width: 75px;">DM</th>
-	                    		<th style="min-width: 150px;">Observaciones</th>
+	                    		<th style="width: 100px;">Producto</th>
+	                    		<th style="width: 75px;">U M</th>
+	                    		<th style="width: 150px;">Descripcion</th>
+	                    		<th style="width: 50px;">Cantidad</th>
+	                    		<th style="width: 50px;">Disponible</th>
+	                    		<th style="width: 75px;">Precio Unitario</th>
+	                    		<th style="width: 75px;">%</th>
+	                    		<th style="width: 75px;">Descuento</th>
+	                    		<th style="width: 75px;">Importe</th>
+	                    		<th style="width: 75px;">Bodega</th>
+	                    		<th style="width: 50px;">Env&iacute;o</th>
+	                    		<th style="width: 75px;">DM</th>
+	                    		<th style="width: 100px;">Observaciones</th>
 	                    	</tr>
 	                    </thead>
 	                    <tbody>
@@ -134,7 +135,7 @@
 	                    		<td><input type="text" class="form-control input-sm" id="descuento" ></td>
 	                    		<td><input type="text" class="form-control input-sm" id="importe" ></td>
 	                    		<td><input type="text" class="form-control input-sm" id="bodega"></td>
-	                    		<td><input type="checkbox"></td>
+	                    		<td><input type="checkbox" id="envia"></td>
 	                    		<td><input type="text" class="form-control input-sm" id="descuentoMaximo" disabled></td>
 	                    		<td><input type="text" class="form-control input-sm" id="observaciones"></td>
 	                    	</tr>
