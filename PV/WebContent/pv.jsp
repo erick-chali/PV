@@ -54,7 +54,7 @@
                             <div class="input-group" id="divFormaPago">
                                 <input type="text" class="form-control input-sm" placeholder="Forma Pago" id="fPago">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-primary btn-sm" type="button" id="f10">F10</button>
+                                    <button class="btn btn-primary btn-sm" type="button" id="f1">F1</button>
                                 </span>
                             </div><!-- /input-group -->
                         </div>
@@ -160,7 +160,7 @@
 		                    	<div class="input-group">
 		                        	<input type="text" class="form-control input-sm" placeholder="Tipo Documento" id="tDoc">
 		                           	<span class="input-group-btn">
-		                            	<button class="btn btn-primary btn-sm" type="button" id="f9">F9</button>
+		                            	<button class="btn btn-primary btn-sm" type="button" id="f2">F2</button>
 		                           	</span>
 		                        </div><!-- /input-group -->
                         </div>
@@ -169,7 +169,7 @@
                             <div class="input-group">
                                 <input type="text" class="form-control input-sm" placeholder="No. Documento" id="nDoc">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-primary btn-sm" type="button" id="f4">F4</button>
+                                    <button class="btn btn-primary btn-sm" type="button" id="f3">F3</button>
                                 </span>
                             </div><!-- /input-group -->
                         </div>
@@ -188,7 +188,7 @@
                             <div class="input-group">
                                 <input type="text" class="form-control input-sm" placeholder="NIT" id="nit">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-primary btn-sm" type="button" id="f3">F3</button>
+                                    <button class="btn btn-primary btn-sm" type="button" id="f4">F4</button>
                                 </span>
                             </div><!-- /input-group -->
                         </div>
@@ -294,23 +294,8 @@
 		      	<div class="col-md-6">
 		      		<input type="text" class="form-control input-sm col-md-6" id="filtroTexto">
 		      	</div>
-		      	<div id="contenedorTablaFiltro">
-		      		<table id="filtroTabla"  data-toggle="table" data-classes="table table-hover table-condensed" data-striped="true" data-row-style="rowStyle" data-search="true" data-pagination="false" data-show-columns="true">
-		      			<thead>
-		      				<tr>
-			      				<th data-sortable="true" >No.</th>
-								<th data-sortable="true" >Nombre</th>
-								<th data-sortable="true">Nit</th>
-								<th data-sortable="true">Fecha</th>
-								<th data-sortable="true">Monto</th>
-								<th data-sortable="true">Autorizaci&oacute;n</th>
-								<th data-sortable="true">Fecha Autorizaci&oacute;n</th>
-		      				</tr>
-		      			</thead>
-		      			<tbody>
-		      				
-		      			</tbody>
-		      		</table>
+		      	<div id="contenedorCotizaciones">
+		      		
 		      	</div>
 		        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal" style="margin-top: 10px;" id="cancelar">Cancelar</button>
 		      </div>
@@ -409,6 +394,39 @@
 		  </div>
 		</div><!-- FIN DE MODAL -->
 		
+		
+		<!-- Modal BUSQUEDA Clientes -->
+		<div id="buscarClientes" class="modal" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="true" tabindex="-1">
+		  <div class="modal-dialog modal-lg">
+		    <!-- Modal content-->
+		    <div class="modal-content">
+		      <div class="modal-header">
+		      	<button type="button" class="close visible-sm visible-xs" data-dismiss="modal">&times;</button>
+		        <h4 class="modal-title">Busqueda de Clientes</h4>
+		      </div>
+		      <div class="modal-body">
+		      	<div class="col-md-6" style="margin-bottom: 10px;">
+		      		<select id="filtroComboClientes" class="form-control input-sm">
+		      		<option value="">Seleccione Filtro</option>
+		      		<option value="1">Nombre</option>
+		      		<option value="2">Nit</option>
+		      		<option value="3">Tarjeta</option>
+		      		</select>
+		      	</div>
+		      	<div class="col-md-6" style="margin-bottom: 10px;">
+		      		<input type="text" class="form-control input-sm col-md-6" id="filtroTextoClientes">
+		      	</div>
+		      	<div id="contenedorClientes">
+		      		 
+		      	</div>
+		        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal" style="margin-top: 10px;" id="cancelar">Cancelar</button>
+		      </div>
+		      <div class="modal-footer">
+		      	<p id="notificacion" class="text-danger"></p>
+		      </div>
+		    </div>
+		  </div>
+		</div><!-- FIN DE MODAL -->
 		
     <script type="text/javascript" src="js/jquery-1.5.min.js"></script>
 	<script type="text/javascript">

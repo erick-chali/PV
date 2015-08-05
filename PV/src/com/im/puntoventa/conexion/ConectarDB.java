@@ -65,7 +65,7 @@ public class ConectarDB {
 //			String usr = datos[3];
 //			String pass = datos[4];
 //			conectar = DriverManager.getConnection("jdbc:sqlserver://186.64.110.212;databaseName=PbMillenium2;"+ datos[3] + ";" + datos[1] + ";");
-			conectar = DriverManager.getConnection("jdbc:sqlserver://vmsoluciones.cloudapp.net;databaseName=MilleniumNew;user=sa;password=SOLUCION");
+			conectar = DriverManager.getConnection("jdbc:sqlserver://localhost;databaseName=MilleniumIM;user=sa;password=SOLUCION");
 //			conectar = DriverManager.getConnection("jdbc:sqlserver://186.64.110.212;databaseName=PbMillenium2;"+datos[3]+";"+datos[1]+";"+"integratedSecurity=true");
 //			conectar = DriverManager.getConnection("jdbc:sqlserver://186.64.110.212;databaseName=PbMillenium2;user=consultas;password=consultas*");
 		} catch (SQLException sqlex) {

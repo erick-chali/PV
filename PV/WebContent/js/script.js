@@ -8,12 +8,19 @@
 //	   $('#indice').hide();
 	   
 	   $(document).keydown(function (e){
-		   if(e.keyCode==115){
+		   if(e.keyCode==114){
+               e.preventDefault();
 			   $('#buscarDocumentos').modal('toggle');
-		   }else if(e.keyCode==121){
+		   }else if(e.keyCode==112){
+               e.preventDefault();
 			   $('#buscarPagos').modal('toggle');
 			   cargarTiposPago();
-		   }
+		   }else if(e.keyCode==115){
+                e.preventDefault();
+               $('#buscarClientes').modal('toggle');
+               $('#filtroTextoClientes').val('');
+               $('#contenedorClientes').empty();
+           }
 	   });
 	   /**EVENTOS*/
 	   fechaActual();
@@ -160,12 +167,17 @@
 		   	 filaNueva.prependTo(('#datosVarios > tbody'));
            });
 	   
-	   $('#f4').click(function (e){
+	   $('#f3').click(function (e){
 		   $('#buscarDocumentos').modal('toggle');
 	   });
-	   $('#f10').click(function (e){
+	   $('#f1').click(function (e){
 		   $('#buscarPagos').modal('toggle');
 		   cargarTiposPago();
+	   });
+        $('#f4').click(function (e){
+		   $('#buscarClientes').modal('toggle');
+		   $('#contenedorClientes').empty();
+            $('#filtroTextoClientes').val('');
 	   });
 	 //seleccionar el tipo de pago desde tabla en modal
 	   $jq("table[id$='tablaPagos'] td:nth-child(1)").live('click',function(event) {  
@@ -215,6 +227,16 @@
 		   }
 		   
 	   });
+        $('#filtroTextoClientes').keydown(function (e){
+            if(e.keyCode==13){
+                if($(this).val()=='' || $('#filtroComboClientes').val() == ''){
+                    alert('Para buscar un cliente debe seleccionar un filtro y un texto');
+                }else{
+                    cargarFiltroClientes($('#filtroComboClientes').val(), $(this).val());
+                }
+                
+            }
+        });
 	   //Seleccionar producto de Bodega alterna
 	   
 	   $jq("table[id$='tablaProductosBodega'] td:nth-child(1)").live('click',function(event) {  
@@ -242,6 +264,17 @@
 		   $('#subTotal').text('SubTotal: ' + parseFloat(subTotal).toFixed(2));
 		   $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(6).children().focus();
 	   });
+        
+        
+        /**SELECCIONAR EL CLIENTE**/
+        $jq("table[id$='tablaClientes'] td:nth-child(1)").live('click',function(event) {
+            event.preventDefault(); 
+            var $td= $(this).closest('tr').children('td');
+            $('#buscarClientes').modal('toggle');
+            cargarDatosNit($td.eq(0).text());
+	   });
+        
+        
 	   //grabar el Documento
 	   $('#grabarDocumento').click(function(){
 		   var numFilas = $('#datosVarios >tbody >tr').length;
@@ -572,5 +605,78 @@
 		       }
 	   });
    }
+    function cargarFiltroClientes(opcion, texto){
+        $.post('FiltroClientes',{opcion : opcion, criterio : texto}, function(responseJson){
+		   if(responseJson!=null){
+			   var contenedor = $("#contenedorClientes");
+			   var tabla = $("<table id='tablaClientes' class='table table-striped table-bordered table-condensed table-hover'></table>");
+		       var thead = $("<thead></thead>");
+		       var tbody = $("<tbody></tbody>");
+		       var encabezado = $("<tr> <th></th> <th></th> <th></th> </tr>");
+		       encabezado.children().eq(0).text("Nit");
+		       encabezado.children().eq(1).text("Nombre");
+		       encabezado.children().eq(2).text("Tarjeta");
+		       encabezado.appendTo(thead);
+		       tabla.appendTo(contenedor);
+		       thead.appendTo(tabla);
+		       tbody.appendTo(tabla);
+		       $.each(responseJson, function(key,value) {
+		            var rowNew = $("<tr> <td><a href='#'></a></td> <td></td> <td></td> </tr>");
+		               rowNew.children().children().eq(0).text(value['nit']);
+		               rowNew.children().eq(1).text(value['nombre']);
+		               rowNew.children().eq(2).text(value['tarjeta']);
+		               rowNew.appendTo($('table#tablaClientes tbody'));
+		       });
+		       $("#tablaClientes").dataTable( {
+		    	   "scrollY" : 200,
+		    	   "scrollX" : true,
+			        "language": {
+			            "url": "//cdn.datatables.net/plug-ins/1.10.7/i18n/Spanish.json"   	
+			        }
+			        
+			    });
+		       }
+	   });
+    }
+    function cargarCotizacionesSucursal(sucursal){
+        $.post('CargarCotSucursal',{sucursal : sucursal}, function(responseJson){
+		   if(responseJson!=null){
+			   var contenedor = $("#contenedorCotizaciones");
+			   var tabla = $("<table id='tablaCotizaciones' class='table table-striped table-bordered table-condensed table-hover'></table>");
+		       var thead = $("<thead></thead>");
+		       var tbody = $("<tbody></tbody>");
+		       var encabezado = $("<tr> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> </tr>");
+		       encabezado.children().eq(0).text("No. Cotizacion");
+		       encabezado.children().eq(1).text("Nombre");
+		       encabezado.children().eq(2).text("Fecha");
+               encabezado.children().eq(2).text("Monto");
+               encabezado.children().eq(2).text("Autorizacion");
+               encabezado.children().eq(2).text("FAutorizo");
+               
+		       encabezado.appendTo(thead);
+		       tabla.appendTo(contenedor);
+		       thead.appendTo(tabla);
+		       tbody.appendTo(tabla);
+		       $.each(responseJson, function(key,value) {
+		            var rowNew = $("<tr> <td><a href='#'></a></td> <td></td> <td></td> <td></td> <td></td> <td></td> </tr>");
+		               rowNew.children().children().eq(0).text(value['nit']);
+		               rowNew.children().eq(1).text(value['nombre']);
+		               rowNew.children().eq(2).text(value['tarjeta']);
+		               rowNew.children().eq(3).text(value['tarjeta']);
+		               rowNew.children().eq(4).text(value['tarjeta']);
+		               rowNew.children().eq(5).text(value['tarjeta']);
+		               rowNew.appendTo($('table#tablaCotizaciones tbody'));
+		       });
+		       $("#tablaCotizaciones").dataTable( {
+		    	   "scrollY" : 200,
+		    	   "scrollX" : true,
+			        "language": {
+			            "url": "//cdn.datatables.net/plug-ins/1.10.7/i18n/Spanish.json"   	
+			        }
+			        
+			    });
+		       }
+	   });
+    }
    function cargarEncabezado(){}
   }(window.jQuery, window, document));
