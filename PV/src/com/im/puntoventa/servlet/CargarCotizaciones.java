@@ -15,9 +15,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import com.im.puntoventa.dao.BuscaCotizaciones;
-import com.im.puntoventa.dao.ImplementaFiltroClientes;
 import com.im.puntoventa.datos.DatosCotizaciones;
-import com.im.puntoventa.datos.DatosFiltroClientes;
 
 /**
  * Servlet implementation class CargarCotizaciones
@@ -38,13 +36,21 @@ public class CargarCotizaciones extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		System.out.println("Entro a listado cotizaciones");
+		int sucursal = 0;
+		int op=0;
+		String criterio = null;
 		request.getSession().setAttribute("opcion", request.getParameter("opcion"));
 		request.getSession().setAttribute("criterio", request.getParameter("criterio"));
+		sucursal = Integer.parseInt((String) request.getSession().getAttribute("codSucursal"));
+		criterio = (String) request.getSession().getAttribute("criterio");
+		if((String)request.getSession().getAttribute("opcion")!=null){
+			op = Integer.parseInt((String)request.getSession().getAttribute("opcion"));
+		}
 		
-		int op = Integer.parseInt((String)request.getSession().getAttribute("opcion"));
 		ArrayList<DatosCotizaciones> listado = null;
 		listado = new ArrayList<DatosCotizaciones>();
-		
+		listado = BuscaCotizaciones.obtenerCotizaciones(sucursal,criterio, op);
 		
 		
 		Gson gson = new Gson();

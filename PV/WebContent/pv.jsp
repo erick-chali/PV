@@ -275,8 +275,8 @@
 		</div><!-- FIN DE MODAL -->
 		
 		<!-- Modal BUSQUEDA DOCUMENTOS -->
-		<div id="buscarDocumentos" class="modal" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-		  <div class="modal-dialog">
+		<div id="buscarDocumentos" class="modal" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="true" tabindex="-1">
+		  <div class="modal-dialog modal-lg">
 		    <!-- Modal content-->
 		    <div class="modal-content">
 		      <div class="modal-header">
@@ -284,15 +284,15 @@
 		        <h4 class="modal-title">Busqueda de Documentos</h4>
 		      </div>
 		      <div class="modal-body">
-		      	<div class="col-md-6">
-		      		<select id="filtroCombo" class="form-control input-sm">
+		      	<div class="col-md-6" style="margin-bottom: 10px;">
+		      		<select id="filtroComboDocumentos" class="form-control input-sm">
 		      		<option value="">Seleccione Filtro</option>
 		      		<option value="1">Nombre</option>
 		      		<option value="2">NIT</option>
 		      		</select>
 		      	</div>
-		      	<div class="col-md-6">
-		      		<input type="text" class="form-control input-sm col-md-6" id="filtroTexto">
+		      	<div class="col-md-6" style="margin-bottom: 10px;">
+		      		<input type="text" class="form-control input-sm col-md-6" id="filtroTextoDocumentos">
 		      	</div>
 		      	<div id="contenedorCotizaciones">
 		      		

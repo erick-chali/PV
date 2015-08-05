@@ -11,6 +11,9 @@
 		   if(e.keyCode==114){
                e.preventDefault();
 			   $('#buscarDocumentos').modal('toggle');
+               $('#filtroTextoDocumentos').val('');
+               $('#contenedorCotizaciones').empty();
+               cargarCotizacionesSucursal();
 		   }else if(e.keyCode==112){
                e.preventDefault();
 			   $('#buscarPagos').modal('toggle');
@@ -169,6 +172,9 @@
 	   
 	   $('#f3').click(function (e){
 		   $('#buscarDocumentos').modal('toggle');
+           $('#filtroTextoDocumentos').val('');
+           $('#contenedorCotizaciones').empty();
+           cargarCotizacionesSucursal();
 	   });
 	   $('#f1').click(function (e){
 		   $('#buscarPagos').modal('toggle');
@@ -233,6 +239,17 @@
                     alert('Para buscar un cliente debe seleccionar un filtro y un texto');
                 }else{
                     cargarFiltroClientes($('#filtroComboClientes').val(), $(this).val());
+                }
+                
+            }
+        });
+        $('#filtroTextoDocumentos').keydown(function (e){
+            if(e.keyCode==13){
+            	$('#contenedorCotizaciones').empty();
+                if($(this).val()=='' || $('#filtroComboDocumentos').val() == ''){
+                    alert('Para buscar un cliente debe seleccionar un filtro y un texto');
+                }else{
+                    cargarCotizacionesSucursal($(this).val(), $('#filtroComboDocumentos').val());
                 }
                 
             }
@@ -638,8 +655,9 @@
 		       }
 	   });
     }
-    function cargarCotizacionesSucursal(sucursal){
-        $.post('CargarCotSucursal',{sucursal : sucursal}, function(responseJson){
+    function cargarCotizacionesSucursal(criterio, opcion){
+        $.post('CargarCotizaciones',{criterio : criterio, opcion : opcion}, function(responseJson){
+            
 		   if(responseJson!=null){
 			   var contenedor = $("#contenedorCotizaciones");
 			   var tabla = $("<table id='tablaCotizaciones' class='table table-striped table-bordered table-condensed table-hover'></table>");
