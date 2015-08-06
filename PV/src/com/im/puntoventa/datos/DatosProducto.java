@@ -3,7 +3,7 @@ package com.im.puntoventa.datos;
 public class DatosProducto {
 	public DatosProducto(String codigoProducto, String descripcionProducto, String medida, String disponible,
 			double precioUnitario, double importe, double descuentoMaximo, String codigoBodega, String codigoLista,
-			double descuento
+			double descuento, String esKit
 			){
 		this.setCodigoProducto(codigoProducto);
 		this.setDescripcionProducto(descripcionProducto);
@@ -15,6 +15,7 @@ public class DatosProducto {
 		this.setCodigoBodega(codigoBodega);
 		this.setCodigoLista(codigoLista);
 		this.setDescuento(descuento);
+		this.setEsKit(esKit);
 	}
 	
 	
@@ -31,8 +32,19 @@ public class DatosProducto {
 	private String codigoLista;
 	private String formaPago;
 	private double descuento;
+	private String esKit;
 	
 	
+	public String getEsKit() {
+		return esKit;
+	}
+
+
+	public void setEsKit(String esKit) {
+		this.esKit = esKit;
+	}
+
+
 	public String getCodigoProducto() {
 		return codigoProducto;
 	}

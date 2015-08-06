@@ -4,7 +4,7 @@ public class DatosCotizaciones {
 	
 	
 	public DatosCotizaciones(String noCotizacion, String nombre, String nit, String monto, String autorizacion,
-			String fAutorizacion, String sucursal, String mensaje) {
+			String fAutorizacion, String sucursal, String mensaje, String fecha) {
 		this.setNombre(nombre);
 		this.setNoCotizacion(noCotizacion);
 		this.setNit(nit);
@@ -13,6 +13,7 @@ public class DatosCotizaciones {
 		this.setfAutorizacion(fAutorizacion);
 		this.setSucursal(sucursal);
 		this.setMensaje(mensaje);
+		this.setFecha(fecha);
 	}
 	public DatosCotizaciones(){}
 	

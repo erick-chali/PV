@@ -99,6 +99,7 @@
                     			<label id="saldoCliente"></label>
                     			<label id="tipoCliente"></label>
                     			<label id="mensaje"></label>
+                    			<label id="codigoLista"></label>
                     		</div>
                     	<div class="table-responsive" id="contenedorDatosVarios">
                     		
@@ -132,8 +133,8 @@
 	                    		<td><input type="text" class="form-control input-sm" id="disponible" ></td>
 	                    		<td><div class="input-group"><span class="input-group-addon">Q.</span><input type="text" class="form-control input-sm" id="precioUnitario" ></div></td>
 	                    		<td><input type="text" class="form-control input-sm" id="porcentaje"></td>
-	                    		<td><input type="text" class="form-control input-sm" id="descuento" ></td>
-	                    		<td><input type="text" class="form-control input-sm" id="importe" ></td>
+	                    		<td><input type="text" class="form-control input-sm" id="descuento" disabled></td>
+	                    		<td><input type="text" class="form-control input-sm" id="importe" disabled></td>
 	                    		<td><input type="text" class="form-control input-sm" id="bodega"></td>
 	                    		<td><input type="checkbox" id="envia"></td>
 	                    		<td><input type="text" class="form-control input-sm" id="descuentoMaximo" disabled></td>
@@ -417,6 +418,30 @@
 		      		<input type="text" class="form-control input-sm col-md-6" id="filtroTextoClientes">
 		      	</div>
 		      	<div id="contenedorClientes">
+		      		 
+		      	</div>
+		        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal" style="margin-top: 10px;" id="cancelar">Cancelar</button>
+		      </div>
+		      <div class="modal-footer">
+		      	<p id="notificacion" class="text-danger"></p>
+		      </div>
+		    </div>
+		  </div>
+		</div><!-- FIN DE MODAL -->
+		
+		
+		<!-- Modal BUSQUEDA Clientes -->
+		<div id="detallesKit" class="modal" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="true" tabindex="-1">
+		  <div class="modal-dialog modal-lg">
+		    <!-- Modal content-->
+		    <div class="modal-content">
+		      <div class="modal-header">
+		      	<button type="button" class="close visible-sm visible-xs" data-dismiss="modal">&times;</button>
+		        <h4 class="modal-title" id="tituloModalKit"></h4>
+		      </div>
+		      <div class="modal-body">
+		      	
+		      	<div id="contenedorKits">
 		      		 
 		      	</div>
 		        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal" style="margin-top: 10px;" id="cancelar">Cancelar</button>

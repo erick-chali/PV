@@ -49,6 +49,14 @@
 			   cargarDatosNit($(this).val());
 		   }
 	   });
+        $(document).on('keydown', '#porcentaje', function (e){
+            if(e.keyCode==13){
+                var indiceFila = $(this).parent().parent().index();
+                $('#indice').text(indiceFila);
+                codigoP = $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(0).children().val();
+	   			$('#codigoProd').text(codigoP);
+            }
+        });
 	   $(document).on('keydown', '#cantidad',function(e){
 		   if(e.keyCode==13){
 			   var indiceFila = $(this).parent().parent().index();
@@ -118,7 +126,8 @@
 			 		   if(responseJson!=null){
 			 			   
 			 			   $.each(responseJson, function(key, value) {
-			 				   $td.eq(0).val(value['codigoProducto']);
+			 				   $td.eq(0).val($.trim(value['codigoProducto']));
+			 				   $('#codigoProd').text($.trim(value['codigoProducto']));
 			 				   $td.eq(1).val(value['medida']);
 			 				   $td.eq(2).val(value['descripcionProducto']);
 			 				   $td.eq(4).val(parseInt(value['disponible']));
@@ -127,6 +136,14 @@
 			 				   $td.eq(6).val(parseFloat(value['descuento']).toFixed(2));
 			 				   $td.eq(7).val(parseFloat(value['importe']).toFixed(2));
 			 				   $td.eq(8).val(value['codigoBodega']);
+			 				   var esKit = value['esKit'];
+			 				   if(esKit=='S'){
+			 					  
+			 					  $('#datosVarios > tbody > tr').eq($('#indice').text()).css( "background-color", "#F89406" );
+			 				   }else if(esKit=='N'){
+			 					  $('#datosVarios > tbody > tr').eq($('#indice').text()).css( "background-color", "#f5f5f5" );
+			 					  
+			 				   }
 			 			    });
 			 			  $td.eq(3).focus();
 			 		   }
@@ -134,7 +151,7 @@
 			 	   });
 		   		}
 		   		
-	   		}else if(e.keyCode==9){
+	   		}else if(e.keyCode==116){
 	   			e.preventDefault();
 	   			$('#filtroTextoProductos').val('');
 	   			var indiceFila = $(this).parent().parent().index();
@@ -144,6 +161,15 @@
 //	   			$('table#datosVarios tbody tr:first td:first').children().val(indiceFila);
 	   			$('#contenedorProductos').empty();
 	   			$('#buscarProductos').modal('toggle');
+	   		}else if (e.keyCode==117){
+	   			e.preventDefault();
+	   			if($(this).val()==''){
+	   				alert('Debe ingresar un producto antes de ver los detalles de kit');
+	   			}else{
+	   				$('#detallesKit').modal('toggle');
+		   			$('#contenedorKits').empty();
+	   			}
+	   			
 	   		}
 	   });
 	   $('#autorizacion').click(function (e){
@@ -160,8 +186,8 @@
         		+'<td><input type="text" class="form-control input-sm" id="disponible" ></td>'
         		+'<td><div class="input-group"><span class="input-group-addon">Q.</span><input type="text" class="form-control input-sm" id="precioUnitario" ></div></td>'
         		+'<td><input type="text" class="form-control input-sm" id="porcentaje"></td>'
-        		+'<td><input type="text" class="form-control input-sm" id="descuento" ></td>'
-        		+'<td><input type="text" class="form-control input-sm" id="importe" ></td>'
+        		+'<td><input type="text" class="form-control input-sm" id="descuento" disabled></td>'
+        		+'<td><input type="text" class="form-control input-sm" id="importe" disabled></td>'
         		+'<td><input type="text" class="form-control input-sm" id="bodega"></td>'
         		+'<td><input type="checkbox" id="envia"></td>'
         		+'<td><input type="text" class="form-control input-sm" id="descuentoMaximo" disabled></td>'
@@ -279,6 +305,7 @@
 		   
 		   subTotal = parseFloat(separarTexto(1, $('#subTotal').text())) + parseFloat($('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(8).children().val());
 		   $('#subTotal').text('SubTotal: ' + parseFloat(subTotal).toFixed(2));
+		   $('#total').text('Total: ' + parseFloat(subTotal).toFixed(2));
 		   $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(6).children().focus();
 	   });
         
@@ -666,10 +693,11 @@
 		       var encabezado = $("<tr> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> </tr>");
 		       encabezado.children().eq(0).text("No. Cotizacion");
 		       encabezado.children().eq(1).text("Nombre");
-		       encabezado.children().eq(2).text("Fecha");
-               encabezado.children().eq(2).text("Monto");
-               encabezado.children().eq(2).text("Autorizacion");
-               encabezado.children().eq(2).text("FAutorizo");
+		       encabezado.children().eq(2).text("Nit");
+		       encabezado.children().eq(3).text("Fecha");
+               encabezado.children().eq(4).text("Monto");
+               encabezado.children().eq(5).text("Autorizacion");
+               encabezado.children().eq(6).text("FAutorizo");
                
 		       encabezado.appendTo(thead);
 		       tabla.appendTo(contenedor);
@@ -677,12 +705,14 @@
 		       tbody.appendTo(tabla);
 		       $.each(responseJson, function(key,value) {
 		            var rowNew = $("<tr> <td><a href='#'></a></td> <td></td> <td></td> <td></td> <td></td> <td></td> </tr>");
-		               rowNew.children().children().eq(0).text(value['nit']);
+		               rowNew.children().children().eq(0).text(value['noCotizacion']);
 		               rowNew.children().eq(1).text(value['nombre']);
-		               rowNew.children().eq(2).text(value['tarjeta']);
-		               rowNew.children().eq(3).text(value['tarjeta']);
-		               rowNew.children().eq(4).text(value['tarjeta']);
-		               rowNew.children().eq(5).text(value['tarjeta']);
+		               rowNew.children().eq(2).text(value['nit']);
+		               var fecha = value['Fecha'];
+		               rowNew.children().eq(3).text(separarTexto(0, fecha));
+		               rowNew.children().eq(4).text(value['monto']);
+		               rowNew.children().eq(5).text(value['autorizacion']);
+		               rowNew.children().eq(6).text(value['fAutorizacion']);
 		               rowNew.appendTo($('table#tablaCotizaciones tbody'));
 		       });
 		       $("#tablaCotizaciones").dataTable( {
@@ -696,5 +726,53 @@
 		       }
 	   });
     }
+    function cargarKitsProducto(lista, medida, codigoPago, codigoProducto, serie, numero){
+        $.post('CargarKits',{lista : lista, medida : medida, pago : codigoPago, codigoProducto: codigoProducto, serie : serie, numero : numero}, function(responseJson){
+            
+		   if(responseJson!=null){
+			   var contenedor = $("#contenedorKits");
+			   var tabla = $("<table id='tablaKits' class='table table-striped table-bordered table-condensed table-hover'></table>");
+		       var thead = $("<thead></thead>");
+		       var tbody = $("<tbody></tbody>");
+		       var encabezado = $("<tr> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> </tr>");
+		       encabezado.children().eq(0).text("Producto");
+		       encabezado.children().eq(1).text("Cod. Kit");
+		       encabezado.children().eq(2).text("Descripcion");
+		       encabezado.children().eq(3).text("Cod. U");
+               encabezado.children().eq(4).text("Medida");
+               encabezado.children().eq(5).text("Cantidad");
+               encabezado.children().eq(6).text("Precio");
+               encabezado.children().eq(7).text("Por Desc.");
+               encabezado.children().eq(8).text("Desc.");
+               encabezado.children().eq(9).text("Frac.");
+               encabezado.children().eq(10).text("Disponible");
+		       encabezado.appendTo(thead);
+		       tabla.appendTo(contenedor);
+		       thead.appendTo(tabla);
+		       tbody.appendTo(tabla);
+		       $.each(responseJson, function(key,value) {
+		            var rowNew = $("<tr> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> </tr>");
+		               rowNew.children().children().eq(0).text(value['noCotizacion']);
+		               rowNew.children().eq(1).text(value['nombre']);
+		               rowNew.children().eq(2).text(value['nit']);
+//		               var fecha = value['Fecha'];
+		               rowNew.children().eq(3).text(value['Fecha']);
+		               rowNew.children().eq(4).text(value['monto']);
+		               rowNew.children().eq(5).text(value['autorizacion']);
+		               rowNew.children().eq(6).text(value['fAutorizacion']);
+		               rowNew.appendTo($('table#tablaKits tbody'));
+		       });
+		       $("#tablaKits").dataTable( {
+		    	   "scrollY" : 200,
+		    	   "scrollX" : true,
+			        "language": {
+			            "url": "//cdn.datatables.net/plug-ins/1.10.7/i18n/Spanish.json"   	
+			        }
+			        
+			    });
+		       }
+	   });
+    }
+    
    function cargarEncabezado(){}
   }(window.jQuery, window, document));

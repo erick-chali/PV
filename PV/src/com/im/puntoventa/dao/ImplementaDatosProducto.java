@@ -71,6 +71,7 @@ public class ImplementaDatosProducto implements InterfazDatosProducto{
 				dato.setImporte(0);
 				dato.setDescuento(0);
 				dato.setCodigoBodega(rs.getString("codigo_bodega"));
+				dato.setEsKit(rs.getString("es_kit"));
 				lista.add(dato);
 			}
 			con.close();

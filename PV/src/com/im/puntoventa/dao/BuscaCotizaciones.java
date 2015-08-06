@@ -29,7 +29,7 @@ public class BuscaCotizaciones {
 					datos.setNoCotizacion(rs.getString("no_cotizacion"));
 					datos.setNombre(rs.getString("Nombre"));
 					datos.setNit(rs.getString("Nit"));
-					datos.setfAutorizacion(rs.getString("Fecha"));
+					datos.setFecha(rs.getString("Fecha"));
 					datos.setMonto(rs.getString("Monto"));
 					datos.setAutorizacion(rs.getString("Autorizacion"));
 					datos.setfAutorizacion(rs.getString("FAutorizo"));
