@@ -5,6 +5,7 @@
 	   var codigoP, descripcion, medida, cantidad, disponible, precioU, porDesc, descuento, importe, envio, dm, observ;
 	   var subTotal = 0;
 	   var Total;
+	   var autorizado = 1;
 //	   $('#indice').hide();
 	   
 	   $(document).keydown(function (e){
@@ -55,6 +56,16 @@
                 $('#indice').text(indiceFila);
                 codigoP = $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(0).children().val();
 	   			$('#codigoProd').text(codigoP);
+	   			var porcentaje = $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(6).children().val();
+	   			var dm = $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(11).children().val();
+	   			if(porcentaje == ' '){
+	   				
+	   			}else if(porcentaje > dm){
+	   				$('#autorizar').modal('toggle');
+	   			}else{
+	   				var valorActual = parseFloat(separarTexto(1, $('#subTotal').text));
+	   				
+	   			}
             }
         });
 	   $(document).on('keydown', '#cantidad',function(e){
@@ -168,6 +179,10 @@
 	   			}else{
 	   				$('#detallesKit').modal('toggle');
 		   			$('#contenedorKits').empty();
+		   			var uni = $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(1).children().val();
+		   			var serie = '';
+		   			var numero = '';
+		   			cargarKitsProducto($('#codigoLista').text(), uni, separarTexto(0, $('#fPago').val()), $('#codigoProd').text(), serie, numero);
 	   			}
 	   			
 	   		}
@@ -481,6 +496,21 @@
 				   
 	   });
    }
+   //Autorizaciones varias
+   function autorizarDocumento(noDoc){
+	   var autorizado = false;
+	   $.post('Autorizaciones',{opcion : noDoc} ,function(responseText) {
+		   if(responseText!=null){
+			   if(parseInt(responseText)==1){
+				   autorizado = true;
+			   }else{
+				   false
+			   }
+		   }
+				   
+	   });
+	   return autorizado;
+   }
    
  //Autorizar tipo documento
    function autorizarDocumento(noDoc){
@@ -690,7 +720,7 @@
 			   var tabla = $("<table id='tablaCotizaciones' class='table table-striped table-bordered table-condensed table-hover'></table>");
 		       var thead = $("<thead></thead>");
 		       var tbody = $("<tbody></tbody>");
-		       var encabezado = $("<tr> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> </tr>");
+		       var encabezado = $("<tr> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> </tr>");
 		       encabezado.children().eq(0).text("No. Cotizacion");
 		       encabezado.children().eq(1).text("Nombre");
 		       encabezado.children().eq(2).text("Nit");
@@ -704,15 +734,24 @@
 		       thead.appendTo(tabla);
 		       tbody.appendTo(tabla);
 		       $.each(responseJson, function(key,value) {
-		            var rowNew = $("<tr> <td><a href='#'></a></td> <td></td> <td></td> <td></td> <td></td> <td></td> </tr>");
+		            var rowNew = $("<tr> <td><a href='#'></a></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> </tr>");
 		               rowNew.children().children().eq(0).text(value['noCotizacion']);
 		               rowNew.children().eq(1).text(value['nombre']);
 		               rowNew.children().eq(2).text(value['nit']);
-		               var fecha = value['Fecha'];
-		               rowNew.children().eq(3).text(separarTexto(0, fecha));
+		               if(typeof value['fecha'] == 'undefined'){
+		            	   rowNew.children().eq(3).text('N/A');
+		               }else{
+		            	   rowNew.children().eq(3).text(separarTexto(0, value['fecha']));
+		               }
+		               
 		               rowNew.children().eq(4).text(value['monto']);
 		               rowNew.children().eq(5).text(value['autorizacion']);
 		               rowNew.children().eq(6).text(value['fAutorizacion']);
+		               if(typeof value['fAutorizacion'] == 'undefined'){
+		            	   rowNew.children().eq(6).text('N/A');
+		               }else{
+		            	   rowNew.children().eq(3).text(separarTexto(0, value['fAutorizacion']));
+		               }
 		               rowNew.appendTo($('table#tablaCotizaciones tbody'));
 		       });
 		       $("#tablaCotizaciones").dataTable( {
@@ -755,8 +794,10 @@
 		               rowNew.children().children().eq(0).text(value['noCotizacion']);
 		               rowNew.children().eq(1).text(value['nombre']);
 		               rowNew.children().eq(2).text(value['nit']);
-//		               var fecha = value['Fecha'];
-		               rowNew.children().eq(3).text(value['Fecha']);
+		               if(value['Fecha']!=null){
+		            	   var fecha = value['Fecha'];
+			               rowNew.children().eq(3).text(value['Fecha']);
+		               }
 		               rowNew.children().eq(4).text(value['monto']);
 		               rowNew.children().eq(5).text(value['autorizacion']);
 		               rowNew.children().eq(6).text(value['fAutorizacion']);

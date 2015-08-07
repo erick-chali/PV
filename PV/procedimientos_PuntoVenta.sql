@@ -2824,3 +2824,229 @@ where codigo_pais = @codigo_pais
 
 GO
 
+/*******PROCEDIMIENTO QUE BUSCA KITS DE PRODUCTOS********/
+IF EXISTS (SELECT sys.objects.name FROM sys.objects INNER JOIN sys.schemas ON sys.objects.schema_id = sys.schemas.schema_id WHERE sys.objects.name = 'stp_UDPV_GetKitsProducto'  and sys.schemas.name = 'dbo'  and sys.objects.type = 'P') 
+/****** Object:  StoredProcedure [dbo].[stp_UDPV_GetKitsProducto]    Script Date: 8/6/2015 9:18:44 PM ******/
+DROP PROCEDURE [dbo].[stp_UDPV_GetKitsProducto]
+GO
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE procedure [dbo].[stp_UDPV_GetKitsProducto]
+	@codigo_lista smallint,
+	@unidad_medida char(2),
+	@codigo_pago smallint,
+	@codigo_producto char(10),
+	@codigo_bodega char(2),
+	@Serie char(2) = Null,
+	@Numero integer = Null
+as
+set nocount on
+-- Fecha Modifico: 14-12-2007
+-- Usuario Modifico: Ocoroy
+-- ver. 1.2.9
+If ISnull(@Numero,0) = 0
+   Begin
+	select a.codigo_producto, b.codigo_producto_det, b.unidad_medida, b.cantidad
+	into #tmpProductosKit	
+	from in_productos a, in_productos_kit b
+	where a.codigo_producto = b.codigo_producto and
+		a.codigo_producto = @codigo_producto
+
+	select a.codigo_producto producto, 
+		a.codigo_producto_det producto_det,
+		b.descripcion descP,
+		a.unidad_medida unidad,
+		c.descripcion descU, 
+		a.cantidad,
+		0 precio,
+		0 porDesc,
+		0 descuento,
+		b.acepta_fracciones Frac,
+		isnull(e.disponible,0) disponible
+	from  #tmpProductosKit a inner join in_productos b on a.codigo_producto_det = b.codigo_producto 
+								inner join in_unidades c on a.unidad_medida = c.unidad_medida
+								inner join pv_precios_kits d on a.codigo_producto = d.codigo_producto and a.codigo_producto_det = d.codigo_producto_det
+								left join in_existencias e on a.codigo_producto_det = e.codigo_producto
+	where 
+		d.unidad_medida = @unidad_medida and
+		d.codigo_lista = @codigo_lista and
+		e.codigo_bodega = @codigo_bodega
+   end
+else
+   Begin
+
+	Select 	ip.codigo_producto producto, ip.codigo_producto producto_det, 
+		ip.descripcion descP, d.unidad_medida unidad, u.descripcion descU,
+		1 cantidad,
+		0 precio,
+		0 porDesc,
+		0 descuento,
+           	ip.acepta_fracciones Frac, 
+		isnull(d.cantidad,0) - isnull(d.devolucion,0) disponible			
+	  from 	in_productos ip, 
+		pv_facturas_kits d, 
+		pv_facturas_det de,
+		pv_facturas_enc e,
+               	in_unidades_medida um,  
+		in_unidades u
+              where  ip.codigo_producto = d.codigo_producto
+		and e.serie = @serie and e.numero = @numero
+                           and e.estado_factura <> 'A'
+	             and e.serie = de.serie and e.numero = de.numero
+		and de.serie = d.serie and de.numero = d.numero
+		and de.correlativo = d.correlativo
+		and de.codigo_producto = @codigo_producto
+		and d.unidad_medida = um.unidad_medida  And d.Codigo_producto = um.codigo_producto
+		and um.unidad_medida = u.unidad_medida
+end
+
+GO
+
+/*******PROCEDIMIENTO QUE BUSCA PRODUCTOS EN BODEGAS ALTERNAS********/
+IF EXISTS (SELECT sys.objects.name FROM sys.objects INNER JOIN sys.schemas ON sys.objects.schema_id = sys.schemas.schema_id WHERE sys.objects.name = 'stp_UDPV_Lookup_ProductosXBodega'  and sys.schemas.name = 'dbo'  and sys.objects.type = 'P') 
+DROP PROCEDURE [dbo].[stp_UDPV_Lookup_ProductosXBodega]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER OFF
+GO
+
+
+CREATE PROCEDURE [dbo].[stp_UDPV_Lookup_ProductosXBodega]
+	@Lista integer,
+	@Cod_Pago integer,
+	@Cod_Prod char(25)
+AS
+
+Set nocount on
+-- Fecha modifico: 17/10/2013
+-- Usuario: Ocoroy
+-- disponible - transito
+
+-- Fecha Modifico: 29-07-2007
+-- Usuario Modifico: Ocoroy
+-- ver 1.2.9
+-- se agrego el filtro por bodega factura = 'S' y se quito el de pago	
+Declare @es_kit char(1)
+
+declare @backorder decimal (18,6),
+	    @fecha_esp datetime
+declare @existe int
+
+
+select @existe=0
+Select @es_kit = es_kit
+from in_productos
+where codigo_producto = @cod_prod
+
+if @es_kit = 'S' 
+begin
+
+	Select ip.codigo_producto as Codigo, ip.descripcion as Descripcion,   m.descripcion as Marca, 
+		pp.precio as PrecioU, Min(isnull(ex.disponible,0)) as Disponible, ex.codigo_bodega as Bodega,f.descripcion as Familia,ip.codigo_referencia as Referencia
+	From pv_precios_productos pp
+	     Left Join in_Productos ip on pp.codigo_producto = ip.codigo_producto 
+   	     Left Join in_marcas m on ip.codigo_marca = m.codigo_marca
+  	     Left Join in_familias f on ip.codigo_familia = f.codigo_familia
+	     Left Join in_productos_kit k on ip.codigo_producto = k.codigo_producto and k.codigo_producto = @cod_prod
+	     Left Join in_existencias ex on k.codigo_producto_det = ex.codigo_producto
+	Where 	pp.codigo_lista = @Lista 
+ 	      	And pp.codigo_producto = @Cod_Prod
+		and ex.codigo_bodega in (Select codigo_bodega from in_bodegas where factura = 'S' and Activo = 1)
+	group by ip.codigo_producto, ip.codigo_referencia, ip.descripcion, m.descripcion, f.descripcion, pp.precio, ex.codigo_bodega  
+end
+Else
+begin
+
+
+--	Modificado: Mario Rodriguez 17/06/2013
+--	indicamos la resta porque la cantidad que estaba mostrando no era correcta
+--	select  sum(isnull(a.cantidad_autorizada,0))cant  ,min(a.fecha_esperado)fecha , b.bodega_entrega, a.codigo_producto
+	select  sum(isnull(a.cantidad_autorizada-a.cantidad_enviada,0))cant  ,
+			max(a.fecha_esperado)fecha , b.bodega_entrega, a.codigo_producto
+	into #backorder
+	from co_ordenesi_det a, co_ordenesi_enc b
+	where a.codigo_tipo = b.codigo_tipo and
+		a.no_orden = b.no_orden and
+		a.codigo_producto = @cod_prod and
+		b.estado_orden = 2
+	group by a.codigo_producto,b.bodega_entrega
+     
+--	Modificado: Mario Rodriguez 14/02/2014
+--	se agregan a in_existencias aquellos productos que tienen orden de compra autorizada (estado 2)
+--	para que se muestre la fecha proxima en que se recibirá la mercadería
+---*
+    select @existe=1 
+    from 
+		in_existencias a,
+		#backorder b
+    where 
+		a.codigo_producto=@Cod_Prod and codigo_bodega=b.bodega_entrega
+		
+    if @existe=0
+    begin
+	   insert in_existencias 
+	      (codigo_producto,codigo_bodega,disponible,reservado,existencias,cantidad_transito)
+	   select 
+	   	   codigo_producto,bodega_entrega,0,0,0,0
+	   from 
+	 	   #backorder
+	   where codigo_producto=@Cod_Prod
+    end
+----*
+
+	Select 	ip.codigo_producto as Codigo,  ip.descripcion as Descripcion, m.descripcion as Marca,
+		pp.precio as PrecioU,
+		case 
+		when isnull(ex.cantidad_transito,0) < 0 then isnull(ex.disponible,0) + isnull(ex.cantidad_transito,0)
+		else isnull(ex.disponible,0) end Disponible, isnull(ex.codigo_bodega,'') as Bodega,
+		bk.cant as Backorder, bk.fecha [Fecha Esperado],isnull(ex.cantidad_transito,0) as Transito, f.descripcion as Familia,
+		ip.codigo_referencia as Referencia
+	into #tmp_productos
+	From pv_precios_productos pp
+	inner Join in_Productos ip on pp.codigo_producto = ip.codigo_producto 
+	inner Join in_marcas m on ip.codigo_marca = m.codigo_marca
+	inner Join in_familias f on ip.codigo_familia = f.codigo_familia
+	Left Join in_existencias ex on pp.codigo_producto = ex.codigo_producto 
+	left join #backorder bk on  ip.codigo_producto = bk.codigo_producto and ex.codigo_bodega = bk.bodega_entrega
+	Where pp.codigo_lista = @Lista
+ 	      And pp.codigo_producto = @Cod_Prod	
+		and ex.codigo_bodega in (Select codigo_bodega from in_bodegas where factura = 'S' and Activo = 1)
+		group by ip.codigo_producto , ip.codigo_referencia , ip.descripcion , 
+		m.descripcion , f.descripcion ,
+		pp.precio , ex.disponible, ex.codigo_bodega, ex.cantidad_transito,
+		bk.cant, bk.fecha
+
+	Select 	a.Codigo, isnull(b.defectuoso,'A') defectuoso
+	into #tmp_alterno
+	from 	#tmp_productos a,
+			in_productos b,
+			in_productos_alternos al,
+			in_existencias ex
+	where 	a.codigo = b.codigo_producto and
+			a.codigo = al.codigo_producto and
+			al.codigo_alterno = ex.codigo_producto and
+			ex.disponible > 0
+	
+	
+	Select 	distinct a.Codigo,  a.Descripcion, a.Marca,
+		a.PrecioU, a.Disponible, a.Bodega,
+		a.Backorder, a.[Fecha Esperado], a.Transito,
+		 a.Familia,a.Referencia,
+			isnull(defectuoso,'N') Df
+	from #tmp_productos a LEFT JOIN
+		#tmp_alterno b
+		on a.codigo = b.codigo
+	
+	order by a.codigo
+
+
+end
+
+GO

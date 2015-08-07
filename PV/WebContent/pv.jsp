@@ -99,7 +99,8 @@
                     			<label id="saldoCliente"></label>
                     			<label id="tipoCliente"></label>
                     			<label id="mensaje"></label>
-                    			<label id="codigoLista"></label>
+                    			<label id="codigoLista">1</label>
+                    			<label id="fechaPrueba"></label>
                     		</div>
                     	<div class="table-responsive" id="contenedorDatosVarios">
                     		

@@ -20,7 +20,7 @@ public class Kit {
 		
 		try{
 			con = new ConectarDB().getConnection();
-			stmt = con.prepareCall("call stp_UDPV_GetKitsProducto(?,?,?,?,?,?,?)");
+			stmt = con.prepareCall("{call stp_UDPV_GetKitsProducto(?,?,?,?,?,?,?)}");
 			stmt.setString(1, codlista);
 			stmt.setString(2, unidad);
 			stmt.setString(3, pago);
@@ -33,7 +33,9 @@ public class Kit {
 			while(rs.next()){
 				datos = new DatosKit();
 				datos.setCodigoProducto(rs.getString("producto"));
+				System.out.println(datos.getCodigoProducto());
 				datos.setCodigoDetKit(rs.getString("producto_det"));
+				System.out.println(datos.getCodigoDetKit());
 				datos.setDescripcion(rs.getString("descP"));
 				datos.setUnidad(rs.getString("unidad"));
 				datos.setMedida(rs.getString("descU"));
