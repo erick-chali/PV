@@ -122,24 +122,26 @@
 	                    		<th style="width: 50px;">Env&iacute;o</th>
 	                    		<th style="width: 75px;">DM</th>
 	                    		<th style="width: 100px;">Observaciones</th>
+	                    		<th class="datosOcultos">Es Kit</th>
+	                    		
 	                    	</tr>
 	                    </thead>
 	                    <tbody>
 	                    	<tr>
-	                    		
-	                    		<td><input type="text" class="form-control input-sm" id="codigoProducto" ></td>
-	                    		<td><input type="text" class="form-control input-sm" id="unidad" disabled></td>
-	                    		<td><input type="text" class="form-control input-sm" id="descripcion" ></td>
-	                    		<td><input type="text" class="form-control input-sm" id="cantidad"></td>
-	                    		<td><input type="text" class="form-control input-sm" id="disponible" ></td>
-	                    		<td><div class="input-group"><span class="input-group-addon">Q.</span><input type="text" class="form-control input-sm" id="precioUnitario" ></div></td>
-	                    		<td><input type="text" class="form-control input-sm" id="porcentaje"></td>
-	                    		<td><input type="text" class="form-control input-sm" id="descuento" disabled></td>
-	                    		<td><input type="text" class="form-control input-sm" id="importe" disabled></td>
-	                    		<td><input type="text" class="form-control input-sm" id="bodega"></td>
-	                    		<td><input type="checkbox" id="envia"></td>
-	                    		<td><input type="text" class="form-control input-sm" id="descuentoMaximo" disabled></td>
-	                    		<td><input type="text" class="form-control input-sm" id="observaciones"></td>
+	                    		<td id="1"><input type="text" class="form-control input-sm" id="codigoProducto" ></td>
+	                    		<td id="2"><input type="text" class="form-control input-sm" id="unidad" disabled></td>
+	                    		<td id="3"><input type="text" class="form-control input-sm" id="descripcion" ></td>
+	                    		<td id="4"><input type="text" class="form-control input-sm" id="cantidad"></td>
+	                    		<td id="5"><input type="text" class="form-control input-sm" id="disponible" ></td>
+	                    		<td id="6"><input type="text" class="form-control input-sm" id="precioUnitario" ></td>
+	                    		<td id="7"><input type="text" class="form-control input-sm" id="porcentaje"></td>
+	                    		<td id="8"><input type="text" class="form-control input-sm" id="descuento" disabled></td>
+	                    		<td id="9"><input type="text" class="form-control input-sm" id="importe" disabled></td>
+	                    		<td id="10"><input type="text" class="form-control input-sm" id="bodega"></td>
+	                    		<td id="11"><input type="checkbox" id="envia"></td>
+	                    		<td id="12"><input type="text" class="form-control input-sm" id="descuentoMaximo" disabled></td>
+	                    		<td id="13"><input type="text" class="form-control input-sm" id="observaciones"></td>
+	                    		<td id="esKit" class="datosOcultos"></td>
 	                    	</tr>
 	                    </tbody>
                     </table>

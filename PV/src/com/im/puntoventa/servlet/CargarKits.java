@@ -47,7 +47,7 @@ public class CargarKits extends HttpServlet {
 		request.getSession().setAttribute("codigoProducto", request.getParameter("codigoProducto"));
 		request.getSession().setAttribute("serie", request.getParameter("serie"));
 		request.getSession().setAttribute("numero", request.getParameter("numero"));
-		
+		request.getSession().setAttribute("bodega", request.getParameter("bodega"));
 		lista = (String)request.getSession().getAttribute("codigoLista");
 		System.out.println("Lista: " + lista);
 		pago = (String)request.getSession().getAttribute("codigoPago");
@@ -58,7 +58,7 @@ public class CargarKits extends HttpServlet {
 		System.out.println("Serie: " + serie);
 		numero = (String)request.getSession().getAttribute("numero");
 		System.out.println("Numero: " + numero);
-		bodega = (String)request.getSession().getAttribute("codigoBodegaLocal");
+		bodega = (String)request.getSession().getAttribute("bodega");
 		System.out.println("Bodega: " + bodega);
 		Connection con = null;
 		CallableStatement stmt = null;

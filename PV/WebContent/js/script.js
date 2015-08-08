@@ -5,9 +5,11 @@
 	   var codigoP, descripcion, medida, cantidad, disponible, precioU, porDesc, descuento, importe, envio, dm, observ;
 	   var subTotal = 0;
 	   var Total;
+	   var temporal;
 	   var autorizado = 1;
 //	   $('#indice').hide();
-	   
+	   $('.datosOcultos').hide();
+	   $('.esKit').hide();
 	   $(document).keydown(function (e){
 		   if(e.keyCode==114){
                e.preventDefault();
@@ -58,12 +60,20 @@
 	   			$('#codigoProd').text(codigoP);
 	   			var porcentaje = $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(6).children().val();
 	   			var dm = $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(11).children().val();
+	   			var im = $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(8).children().val();
+	   			
 	   			if(porcentaje == ' '){
 	   				
 	   			}else if(porcentaje > dm){
 	   				$('#autorizar').modal('toggle');
 	   			}else{
-	   				var valorActual = parseFloat(separarTexto(1, $('#subTotal').text));
+	   				temporal = separarTexto(1, $('#subTotal').text());
+	   				var porCan = parseFloat(im * (porcentaje/100)).toFixed(2);
+	   				$('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(7).children().val(porCan);
+	   				$('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(8).children().val(im-porCan);
+	   				alert(im-porCan);
+	   				$('#subTotal').text('SubTotal: ' + (im-porCan));
+	   				$('#total').text('Total: ' + (im-porCan));
 	   				
 	   			}
             }
@@ -102,8 +112,10 @@
 					   resultado = parseFloat($('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(3).children().val()*
 				   				$('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(5).children().children().eq(1).val()
 					   ).toFixed(2);
+					   
 					   $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(8).children().val(resultado);
 					   $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(6).children().focus();
+					   
 				   }
 				   
 			   }
@@ -135,19 +147,20 @@
 			   		var $td2= $(this).closest('tr').children('td').children('div').children('input');
 			   		$.post('TraerProducto',{codigo :codigo, lista : lista, formaPago : formaPago} ,function(responseJson){
 			 		   if(responseJson!=null){
-			 			   
 			 			   $.each(responseJson, function(key, value) {
 			 				   $td.eq(0).val($.trim(value['codigoProducto']));
 			 				   $('#codigoProd').text($.trim(value['codigoProducto']));
 			 				   $td.eq(1).val(value['medida']);
 			 				   $td.eq(2).val(value['descripcionProducto']);
 			 				   $td.eq(4).val(parseInt(value['disponible']));
-			 				   $td2.eq(0).val(value['precioUnitario']);
+			 				   $td.eq(5).val(value['precioUnitario']);
 			 				   $td.eq(10).val(value['descuentoMaximo']);
 			 				   $td.eq(6).val(parseFloat(value['descuento']).toFixed(2));
 			 				   $td.eq(7).val(parseFloat(value['importe']).toFixed(2));
 			 				   $td.eq(8).val(value['codigoBodega']);
 			 				   var esKit = value['esKit'];
+			 				  $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(13).text(value['esKit']);
+			 				  
 			 				   if(esKit=='S'){
 			 					  
 			 					  $('#datosVarios > tbody > tr').eq($('#indice').text()).css( "background-color", "#F89406" );
@@ -156,13 +169,16 @@
 			 					  
 			 				   }
 			 			    });
+			 			  var test = $('#datosVarios > tbody > tr').eq($('#indice').text()).find('#1').children().val();
+			   				alert(test);
+			 			  alert($('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(13).text());
 			 			  $td.eq(3).focus();
 			 		   }
 			 				   
 			 	   });
 		   		}
 		   		
-	   		}else if(e.keyCode==116){
+	   		}else if(e.keyCode==118){
 	   			e.preventDefault();
 	   			$('#filtroTextoProductos').val('');
 	   			var indiceFila = $(this).parent().parent().index();
@@ -176,13 +192,16 @@
 	   			e.preventDefault();
 	   			if($(this).val()==''){
 	   				alert('Debe ingresar un producto antes de ver los detalles de kit');
+	   				
 	   			}else{
+	   				
 	   				$('#detallesKit').modal('toggle');
 		   			$('#contenedorKits').empty();
 		   			var uni = $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(1).children().val();
+		   			var bod = $('#datosVarios > tbody > tr').eq($('#indice').text()).children().eq(9).children().val();
 		   			var serie = '';
 		   			var numero = '';
-		   			cargarKitsProducto($('#codigoLista').text(), uni, separarTexto(0, $('#fPago').val()), $('#codigoProd').text(), serie, numero);
+		   			cargarKitsProducto($('#codigoLista').text(), uni, separarTexto(0, $('#fPago').val()), $('#codigoProd').text(), bod, serie, numero);
 	   			}
 	   			
 	   		}
@@ -199,7 +218,7 @@
         		+'<td><input type="text" class="form-control input-sm" id="descripcion" ></td>'
         		+'<td><input type="text" class="form-control input-sm" id="cantidad"></td>'
         		+'<td><input type="text" class="form-control input-sm" id="disponible" ></td>'
-        		+'<td><div class="input-group"><span class="input-group-addon">Q.</span><input type="text" class="form-control input-sm" id="precioUnitario" ></div></td>'
+        		+'<td><input type="text" class="form-control input-sm" id="precioUnitario" ></td>'
         		+'<td><input type="text" class="form-control input-sm" id="porcentaje"></td>'
         		+'<td><input type="text" class="form-control input-sm" id="descuento" disabled></td>'
         		+'<td><input type="text" class="form-control input-sm" id="importe" disabled></td>'
@@ -207,6 +226,7 @@
         		+'<td><input type="checkbox" id="envia"></td>'
         		+'<td><input type="text" class="form-control input-sm" id="descuentoMaximo" disabled></td>'
         		+'<td><input type="text" class="form-control input-sm" id="observaciones"></td>'
+        		+'<td id="esKit" class="datosOcultos"></td>'
 		   		 +'</tr>');
 		   	 filaNueva.prependTo(('#datosVarios > tbody'));
            });
@@ -361,7 +381,7 @@
 			   medida = $('#datosVarios > tbody > tr').eq(index).children().eq(1).children().val();
 			   cantidad = $('#datosVarios > tbody > tr').eq(index).children().eq(3).children().val();
 			   disponible = $('#datosVarios > tbody > tr').eq(index).children().eq(4).children().val();
-			   precioU = $('#datosVarios > tbody > tr').eq(index).children().eq(5).children().children().eq(1).val();
+			   precioU = $('#datosVarios > tbody > tr').eq(index).children().eq(5).children().val();
 			   if($('#datosVarios > tbody > tr').eq(index).children().eq(6).children().val()==''){
 				   porDesc = 0.00;
 			   }else{
@@ -634,35 +654,29 @@
 			   var tabla = $("<table id='tablaProductosBodega' class='table table-striped table-bordered table-condensed table-hover'></table>");
 		       var thead = $("<thead></thead>");
 		       var tbody = $("<tbody></tbody>");
-		       var encabezado = $("<tr> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th>  <th></th> <th></th> <th></th> <th></th> </tr>");
+		       var encabezado = $("<tr> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> </tr>");
 		       encabezado.children().eq(0).text("Codigo");
 		       encabezado.children().eq(1).text("Descripcion");
 		       encabezado.children().eq(2).text("Marca");
 		       encabezado.children().eq(3).text("Precio U");
 		       encabezado.children().eq(4).text("Disponible");
 		       encabezado.children().eq(5).text("Bodega");
-		       encabezado.children().eq(6).text("Back Order");
-		       encabezado.children().eq(7).text("Fecha Espera");
-		       encabezado.children().eq(8).text('Transito');
-		       encabezado.children().eq(9).text("Familia");
-		       encabezado.children().eq(10).text("referencia");
+		       encabezado.children().eq(6).text("Familia");
+		       encabezado.children().eq(7).text("Referencia");
 		       encabezado.appendTo(thead);
 		       tabla.appendTo(contenedor);
 		       thead.appendTo(tabla);
 		       tbody.appendTo(tabla);
 		       $.each(responseJson, function(key,value) {
-		            var rowNew = $("<tr> <td><a href='#'></a></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> </tr>");
+		            var rowNew = $("<tr> <td><a href='#'></a></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> </tr>");
 		               rowNew.children().children().eq(0).text(value['codigoProducto']);
 		               rowNew.children().eq(1).text(value['descripcionProducto']);
 		               rowNew.children().eq(2).text(value['marcaProducto']);
 		               rowNew.children().eq(3).text(value['precioProducto']);
 		               rowNew.children().eq(4).text(parseInt(value['disponible']));
 		               rowNew.children().eq(5).text(value['bodegaProducto']);
-		               rowNew.children().eq(6).text(parseInt(value['backOrder']));
-		               rowNew.children().eq(7).text(value['fechaespera']);
-		               rowNew.children().eq(8).text(value['transito']);
-		               rowNew.children().eq(9).text(value['familiaProducto']);
-		               rowNew.children().eq(10).text(value['referenciaProducto']);
+		               rowNew.children().eq(6).text(value['familiaProducto']);
+		               rowNew.children().eq(7).text(value['referenciaProducto']);
 		               rowNew.appendTo($('table#tablaProductosBodega tbody'));
 		       });
 		       $("#tablaProductosBodega").dataTable( {
@@ -765,12 +779,12 @@
 		       }
 	   });
     }
-    function cargarKitsProducto(lista, medida, codigoPago, codigoProducto, serie, numero){
-        $.post('CargarKits',{lista : lista, medida : medida, pago : codigoPago, codigoProducto: codigoProducto, serie : serie, numero : numero}, function(responseJson){
+    function cargarKitsProducto(lista, medida, codigoPago, codigoProducto, bodega, serie, numero){
+        $.post('CargarKits',{lista : lista, medida : medida, pago : codigoPago, codigoProducto: codigoProducto, bodega: bodega, serie : serie, numero : numero}, function(responseJson){
             
 		   if(responseJson!=null){
 			   var contenedor = $("#contenedorKits");
-			   var tabla = $("<table id='tablaKits' class='table table-striped table-bordered table-condensed table-hover'></table>");
+			   var tabla = $("<table id='tablaKits' class='table table-striped table-bordered table-hover'></table>");
 		       var thead = $("<thead></thead>");
 		       var tbody = $("<tbody></tbody>");
 		       var encabezado = $("<tr> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> </tr>");
@@ -791,17 +805,19 @@
 		       tbody.appendTo(tabla);
 		       $.each(responseJson, function(key,value) {
 		            var rowNew = $("<tr> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> </tr>");
-		               rowNew.children().children().eq(0).text(value['noCotizacion']);
-		               rowNew.children().eq(1).text(value['nombre']);
-		               rowNew.children().eq(2).text(value['nit']);
-		               if(value['Fecha']!=null){
-		            	   var fecha = value['Fecha'];
-			               rowNew.children().eq(3).text(value['Fecha']);
-		               }
-		               rowNew.children().eq(4).text(value['monto']);
-		               rowNew.children().eq(5).text(value['autorizacion']);
-		               rowNew.children().eq(6).text(value['fAutorizacion']);
+		               rowNew.children().eq(0).text(value['codigoProducto']);
+		               rowNew.children().eq(1).text(value['codigoDetKit']);
+		               rowNew.children().eq(2).text(value['descripcion']);
+		               rowNew.children().eq(3).text(value['unidad']);
+		               rowNew.children().eq(4).text(value['medida']);
+		               rowNew.children().eq(5).text(value['cantidad']);
+		               rowNew.children().eq(6).text(value['precio']);
+		               rowNew.children().eq(7).text(value['porDesc']);
+		               rowNew.children().eq(8).text(value['descuento']);
+		               rowNew.children().eq(9).text(value['frac']);
+		               rowNew.children().eq(10).text(value['disponible']);
 		               rowNew.appendTo($('table#tablaKits tbody'));
+		               $('#tituloModalKit').text('Detalle de componentes producto: ' + value['codigoProducto']);
 		       });
 		       $("#tablaKits").dataTable( {
 		    	   "scrollY" : 200,
@@ -814,6 +830,14 @@
 		       }
 	   });
     }
-    
+    function cargarValorCelda(indiceFila, idCelda){
+    	var valor;
+    	var simbolo = '#';
+    	var concatenada = simbolo.concat(idCelda);
+    	alert(concatenada);
+    	valor = $('#datosVarios > tbody > tr').eq(indiceFila).find(concatenada).children().val();
+    	alert(valor);
+    	return valor;
+    }
    function cargarEncabezado(){}
   }(window.jQuery, window, document));

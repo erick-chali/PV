@@ -21,11 +21,10 @@ public class ImplementaProdOtrasBod implements InterfazProdOtrasBod{
 		
 		con = new ConectarDB().getConnection();
 		try {
-			stmt = con.prepareCall("{call stp_UDPV_LookUp_Prods_FilterDesc_Prod(?,?,?,?)}");
+			stmt = con.prepareCall("{call stp_UDPV_Lookup_ProductosXBodega(?,?,?)}");
 			stmt.setInt(1, Integer.parseInt(lista));
 			stmt.setInt(2, Integer.parseInt(tipoPago));
 			stmt.setString(3, codigoProducto);
-			stmt.setString(4, descripcion);
 			rs= stmt.executeQuery();
 			
 			while(rs.next()){
@@ -36,9 +35,6 @@ public class ImplementaProdOtrasBod implements InterfazProdOtrasBod{
 				datos.setPrecioProducto(rs.getDouble("PrecioU"));
 				datos.setDisponible(rs.getString("Disponible"));
 				datos.setBodegaProducto(rs.getString("Bodega"));
-				datos.setBackOrder(rs.getString("BackOrder"));
-				datos.setFechaespera(rs.getString("Fecha Esp"));
-				datos.setTransito(rs.getString("Transito"));
 				datos.setFamiliaProducto(rs.getString("Familia"));
 				datos.setReferenciaProducto(rs.getString("Referencia"));
 				listado.add(datos);

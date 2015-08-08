@@ -26,8 +26,8 @@ public class Kit {
 			stmt.setString(3, pago);
 			stmt.setString(4, producto);
 			stmt.setString(5, bodega);
-			stmt.setString(6, serie);
-			stmt.setString(7, numero);
+			stmt.setString(6, null);
+			stmt.setString(7, null);
 			rs = stmt.executeQuery();
 			
 			while(rs.next()){
